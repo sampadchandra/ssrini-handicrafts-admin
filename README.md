@@ -18,5 +18,7 @@ Full-stack e-commerce  system constisting of:
 - Git
 - GitHub
 
-## Current Development Phase 
+
+## Current Development Phase
+
 
