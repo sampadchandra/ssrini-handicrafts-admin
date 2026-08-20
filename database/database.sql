@@ -1,8 +1,8 @@
-CREATE DATABASE IF NOT EXISTS ssrini_handcrafts
+CREATE DATABASE IF NOT EXISTS ssrini_handicrafts
 CHARACTER SET utf8mb4
 COLLATE utf8mb4_unicode_ci;
 
-USE ssrini_handcrafts;
+USE ssrini_handicrafts;
 
 
 -- 1. ADMINS
@@ -320,7 +320,7 @@ CREATE TABLE IF NOT EXISTS about_content (
 CREATE TABLE IF NOT EXISTS store_settings (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 
-    store_name VARCHAR(150) NOT NULL DEFAULT 'Ssrini Handcrafts',
+    store_name VARCHAR(150) NOT NULL DEFAULT 'Ssrini Handicrafts',
 
     email VARCHAR(150) NULL,
     phone VARCHAR(20) NULL,
