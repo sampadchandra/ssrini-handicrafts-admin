@@ -31,5 +31,13 @@ try {
     );
 
 } catch (PDOException $e) {
-    die('Database connection failed.');
+    die(
+        'Database connection failed.<br><br>' .
+        'Error: ' .
+        htmlspecialchars(
+            $e->getMessage(),
+            ENT_QUOTES,
+            'UTF-8'
+        )
+    );
 }

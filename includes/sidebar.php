@@ -97,7 +97,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             </div>
 
 
-            <a href="#" class="nav-item">
+            <a href="products.php" class="nav-item">
 
                 <span class="nav-icon">
                     🛍️
@@ -110,7 +110,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             </a>
 
 
-            <a href="#" class="nav-item">
+            <a href="invoices.php" class="nav-item">
 
                 <span class="nav-icon">
                     🧾
@@ -134,7 +134,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             </div>
 
 
-            <a href="#" class="nav-item">
+            <a href="filter-configuration.php" class="nav-item">
 
                 <span class="nav-icon">
                     🔍
@@ -147,7 +147,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             </a>
 
 
-            <a href="#" class="nav-item">
+            <a href="front-page-content.php" class="nav-item">
 
                 <span class="nav-icon">
                     🏠
@@ -160,7 +160,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             </a>
 
 
-            <a href="#" class="nav-item">
+            <a href="about-details.php" class="nav-item">
 
                 <span class="nav-icon">
                     ℹ️
@@ -184,7 +184,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             </div>
 
 
-            <a href="#" class="nav-item">
+            <a href="customers.php" class="nav-item">
 
                 <span class="nav-icon">
                     👥
@@ -197,7 +197,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             </a>
 
 
-            <a href="#" class="nav-item">
+            <a href="reviews.php" class="nav-item">
 
                 <span class="nav-icon">
                     ⭐
@@ -210,7 +210,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             </a>
 
 
-            <a href="#" class="nav-item">
+            <a href="notifications.php" class="nav-item">
 
                 <span class="nav-icon">
                     🔔
@@ -223,7 +223,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             </a>
 
 
-            <a href="#" class="nav-item">
+            <a href="analytics.php" class="nav-item">
 
                 <span class="nav-icon">
                     📈
@@ -236,7 +236,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             </a>
 
 
-            <a href="#" class="nav-item">
+            <a href="activity-logs.php" class="nav-item">
 
                 <span class="nav-icon">
                     📝
@@ -249,7 +249,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             </a>
 
 
-            <a href="#" class="nav-item">
+            <a href="settings.php" class="nav-item">
 
                 <span class="nav-icon">
                     ⚙️

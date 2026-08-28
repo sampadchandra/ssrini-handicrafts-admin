@@ -2,7 +2,7 @@
 
 /**
  * Ssrini Handicrafts
- * Create Product API
+ * Update Product API
  */
 
 require_once __DIR__ . '/../config/database.php';
@@ -15,7 +15,7 @@ header('Content-Type: application/json; charset=UTF-8');
 
 /*
 |--------------------------------------------------------------------------
-| ONLY POST REQUEST
+| Request Method
 |--------------------------------------------------------------------------
 */
 
@@ -34,17 +34,27 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 /*
 |--------------------------------------------------------------------------
-| READ FORM DATA
+| Read Form Data
 |--------------------------------------------------------------------------
 */
 
-$productCode = trim($_POST['product_code'] ?? '');
+$productId = (int) ($_POST['id'] ?? 0);
 
-$name = trim($_POST['name'] ?? '');
+$productCode = trim(
+    $_POST['product_code'] ?? ''
+);
 
-$categoryId = (int) ($_POST['category_id'] ?? 0);
+$name = trim(
+    $_POST['name'] ?? ''
+);
 
-$description = trim($_POST['description'] ?? '');
+$categoryId = (int) (
+    $_POST['category_id'] ?? 0
+);
+
+$description = trim(
+    $_POST['description'] ?? ''
+);
 
 $price = $_POST['price'] ?? '';
 
@@ -57,11 +67,18 @@ $status = $_POST['status'] ?? 'active';
 
 /*
 |--------------------------------------------------------------------------
-| VALIDATION
+| Validation
 |--------------------------------------------------------------------------
 */
 
 $errors = [];
+
+
+if ($productId <= 0) {
+
+    $errors['id'] =
+        'Invalid product ID.';
+}
 
 
 if ($productCode === '') {
@@ -85,7 +102,10 @@ if ($categoryId <= 0) {
 }
 
 
-if ($price === '' || !is_numeric($price)) {
+if (
+    $price === '' ||
+    !is_numeric($price)
+) {
 
     $errors['price'] =
         'Please enter a valid price.';
@@ -146,7 +166,7 @@ if (
 
 /*
 |--------------------------------------------------------------------------
-| RETURN VALIDATION ERRORS
+| Return Validation Errors
 |--------------------------------------------------------------------------
 */
 
@@ -166,78 +186,45 @@ if (!empty($errors)) {
 
 /*
 |--------------------------------------------------------------------------
-| NORMALIZE VALUES
+| Check Existing Product
 |--------------------------------------------------------------------------
 */
 
-$price = (float) $price;
-
-$discountPrice =
-    $discountPrice === ''
-        ? null
-        : (float) $discountPrice;
-
-$stockQuantity = (int) $stockQuantity;
-
-
-/*
-|--------------------------------------------------------------------------
-| GENERATE SLUG
-|--------------------------------------------------------------------------
-*/
-
-$slug = strtolower(
-    trim(
-        preg_replace(
-            '/[^A-Za-z0-9-]+/',
-            '-',
-            $name
-        ),
-        '-'
-    )
+$productCheck = $pdo->prepare(
+    "
+    SELECT
+        id,
+        image
+    FROM products
+    WHERE id = :id
+    LIMIT 1
+    "
 );
 
+$productCheck->execute([
+    ':id' => $productId
+]);
 
-/*
-|--------------------------------------------------------------------------
-| MAKE SLUG UNIQUE
-|--------------------------------------------------------------------------
-*/
+$existingProduct =
+    $productCheck->fetch(PDO::FETCH_ASSOC);
 
-$baseSlug = $slug;
 
-$counter = 1;
+if (!$existingProduct) {
 
-while (true) {
+    http_response_code(404);
 
-    $slugCheck = $pdo->prepare(
-        "
-        SELECT id
-        FROM products
-        WHERE slug = :slug
-        LIMIT 1
-        "
-    );
-
-    $slugCheck->execute([
-        ':slug' => $slug
+    echo json_encode([
+        'success' => false,
+        'message' => 'Product not found.'
     ]);
 
-    if (!$slugCheck->fetch()) {
-
-        break;
-    }
-
-    $slug =
-        $baseSlug . '-' . $counter;
-
-    $counter++;
+    exit;
 }
 
 
 /*
 |--------------------------------------------------------------------------
-| CHECK PRODUCT CODE
+| Check Product Code
 |--------------------------------------------------------------------------
 */
 
@@ -246,14 +233,15 @@ $codeCheck = $pdo->prepare(
     SELECT id
     FROM products
     WHERE product_code = :product_code
+      AND id != :id
     LIMIT 1
     "
 );
 
 $codeCheck->execute([
-    ':product_code' => $productCode
+    ':product_code' => $productCode,
+    ':id' => $productId
 ]);
-
 
 if ($codeCheck->fetch()) {
 
@@ -271,7 +259,7 @@ if ($codeCheck->fetch()) {
 
 /*
 |--------------------------------------------------------------------------
-| CHECK CATEGORY
+| Check Category
 |--------------------------------------------------------------------------
 */
 
@@ -289,7 +277,6 @@ $categoryCheck->execute([
     ':category_id' => $categoryId
 ]);
 
-
 if (!$categoryCheck->fetch()) {
 
     http_response_code(422);
@@ -306,14 +293,92 @@ if (!$categoryCheck->fetch()) {
 
 /*
 |--------------------------------------------------------------------------
+| Normalize Values
+|--------------------------------------------------------------------------
+*/
+
+$price = (float) $price;
+
+$discountPrice =
+    $discountPrice === ''
+        ? null
+        : (float) $discountPrice;
+
+$stockQuantity =
+    (int) $stockQuantity;
+
+
+/*
+|--------------------------------------------------------------------------
+| Generate Slug
+|--------------------------------------------------------------------------
+*/
+
+$slug = strtolower(
+    trim(
+        preg_replace(
+            '/[^A-Za-z0-9-]+/',
+            '-',
+            $name
+        ),
+        '-'
+    )
+);
+
+
+/*
+|--------------------------------------------------------------------------
+| Make Slug Unique
+|--------------------------------------------------------------------------
+*/
+
+$baseSlug = $slug;
+
+$counter = 1;
+
+while (true) {
+
+    $slugCheck = $pdo->prepare(
+        "
+        SELECT id
+        FROM products
+        WHERE slug = :slug
+          AND id != :id
+        LIMIT 1
+        "
+    );
+
+    $slugCheck->execute([
+        ':slug' => $slug,
+        ':id' => $productId
+    ]);
+
+    if (!$slugCheck->fetch()) {
+
+        break;
+    }
+
+    $slug =
+        $baseSlug . '-' . $counter;
+
+    $counter++;
+}
+
+
+/*
+|--------------------------------------------------------------------------
 | IMAGE UPLOAD
 |--------------------------------------------------------------------------
 */
 
-$imageName = null;
+$imageName = $existingProduct['image'];
 
-$uploadedImagePath = null;
 
+/*
+|--------------------------------------------------------------------------
+| Check New Image
+|--------------------------------------------------------------------------
+*/
 
 if (
     isset($_FILES['image']) &&
@@ -325,11 +390,14 @@ if (
 
     /*
     |----------------------------------------------------------------------
-    | CHECK UPLOAD ERROR
+    | Upload Error
     |----------------------------------------------------------------------
     */
 
-    if ($image['error'] !== UPLOAD_ERR_OK) {
+    if (
+        $image['error'] !==
+        UPLOAD_ERR_OK
+    ) {
 
         http_response_code(422);
 
@@ -344,17 +412,21 @@ if (
 
     /*
     |----------------------------------------------------------------------
-    | CHECK FILE SIZE
+    | Maximum File Size
     |----------------------------------------------------------------------
     */
 
-    if ($image['size'] > 5 * 1024 * 1024) {
+    if (
+        $image['size'] >
+        5 * 1024 * 1024
+    ) {
 
         http_response_code(422);
 
         echo json_encode([
             'success' => false,
-            'message' => 'Image size must be 5MB or less.'
+            'message' =>
+                'Image size must not exceed 5MB.'
         ]);
 
         exit;
@@ -363,16 +435,9 @@ if (
 
     /*
     |----------------------------------------------------------------------
-    | CHECK REAL MIME TYPE
+    | Check Image Type
     |----------------------------------------------------------------------
     */
-
-    $finfo = new finfo(FILEINFO_MIME_TYPE);
-
-    $mimeType = $finfo->file(
-        $image['tmp_name']
-    );
-
 
     $allowedTypes = [
         'image/jpeg' => 'jpg',
@@ -381,14 +446,28 @@ if (
     ];
 
 
-    if (!isset($allowedTypes[$mimeType])) {
+    $finfo = new finfo(
+        FILEINFO_MIME_TYPE
+    );
+
+    $mimeType =
+        $finfo->file(
+            $image['tmp_name']
+        );
+
+
+    if (
+        !isset(
+            $allowedTypes[$mimeType]
+        )
+    ) {
 
         http_response_code(422);
 
         echo json_encode([
             'success' => false,
             'message' =>
-                'Invalid image type. Only JPG, PNG and WEBP are allowed.'
+                'Only JPG, PNG and WEBP images are allowed.'
         ]);
 
         exit;
@@ -397,72 +476,59 @@ if (
 
     /*
     |----------------------------------------------------------------------
-    | CREATE UPLOAD DIRECTORY
+    | Upload Directory
     |----------------------------------------------------------------------
     */
 
     $uploadDirectory =
-        __DIR__ . '/../assets/uploads/';
+        __DIR__ .
+        '/../assets/uploads/';
 
 
-    if (!is_dir($uploadDirectory)) {
+    if (
+        !is_dir(
+            $uploadDirectory
+        )
+    ) {
 
-        if (!mkdir(
+        mkdir(
             $uploadDirectory,
             0755,
             true
-        )) {
-
-            http_response_code(500);
-
-            echo json_encode([
-                'success' => false,
-                'message' =>
-                    'Unable to create upload directory.'
-            ]);
-
-            exit;
-        }
+        );
     }
 
 
     /*
     |----------------------------------------------------------------------
-    | GENERATE UNIQUE IMAGE NAME
+    | Generate Unique Image Name
     |----------------------------------------------------------------------
     */
 
-    $extension =
+    $imageName =
+        uniqid(
+            'product_',
+            true
+        ) .
+        '.' .
         $allowedTypes[$mimeType];
 
 
-    $imageName =
-        'product_' .
-        uniqid('', true) .
-        '.' .
-        $extension;
+    $uploadPath =
+        $uploadDirectory .
+        $imageName;
 
 
     /*
     |----------------------------------------------------------------------
-    | FINAL IMAGE PATH
-    |----------------------------------------------------------------------
-    */
-
-    $uploadedImagePath =
-        $uploadDirectory . $imageName;
-
-
-    /*
-    |----------------------------------------------------------------------
-    | MOVE IMAGE
+    | Move Uploaded Image
     |----------------------------------------------------------------------
     */
 
     if (
         !move_uploaded_file(
             $image['tmp_name'],
-            $uploadedImagePath
+            $uploadPath
         )
     ) {
 
@@ -471,17 +537,47 @@ if (
         echo json_encode([
             'success' => false,
             'message' =>
-                'Unable to save product image.'
+                'Unable to save uploaded image.'
         ]);
 
         exit;
+    }
+
+
+    /*
+    |----------------------------------------------------------------------
+    | Delete Old Image
+    |----------------------------------------------------------------------
+    */
+
+    if (
+        !empty(
+            $existingProduct['image']
+        )
+    ) {
+
+        $oldImagePath =
+            $uploadDirectory .
+            $existingProduct['image'];
+
+
+        if (
+            is_file(
+                $oldImagePath
+            )
+        ) {
+
+            unlink(
+                $oldImagePath
+            );
+        }
     }
 }
 
 
 /*
 |--------------------------------------------------------------------------
-| INSERT PRODUCT
+| Update Product
 |--------------------------------------------------------------------------
 */
 
@@ -489,31 +585,21 @@ try {
 
     $stmt = $pdo->prepare(
         "
-        INSERT INTO products (
-            category_id,
-            product_code,
-            name,
-            slug,
-            description,
-            price,
-            discount_price,
-            stock_quantity,
-            image,
-            status
-        )
+        UPDATE products
 
-        VALUES (
-            :category_id,
-            :product_code,
-            :name,
-            :slug,
-            :description,
-            :price,
-            :discount_price,
-            :stock_quantity,
-            :image,
-            :status
-        )
+        SET
+            category_id = :category_id,
+            product_code = :product_code,
+            name = :name,
+            slug = :slug,
+            description = :description,
+            price = :price,
+            discount_price = :discount_price,
+            stock_quantity = :stock_quantity,
+            image = :image,
+            status = :status
+
+        WHERE id = :id
         "
     );
 
@@ -550,23 +636,16 @@ try {
             $imageName,
 
         ':status' =>
-            $status
+            $status,
+
+        ':id' =>
+            $productId
     ]);
 
 
     /*
     |--------------------------------------------------------------------------
-    | GET NEW PRODUCT ID
-    |--------------------------------------------------------------------------
-    */
-
-    $productId =
-        (int) $pdo->lastInsertId();
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | SUCCESS RESPONSE
+    | Success Response
     |--------------------------------------------------------------------------
     */
 
@@ -575,33 +654,13 @@ try {
         'success' => true,
 
         'message' =>
-            'Product created successfully.',
+            'Product updated successfully.',
 
         'product_id' =>
-            $productId,
-
-        'image' =>
-            $imageName
+            $productId
     ]);
 
-
 } catch (PDOException $e) {
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | DELETE IMAGE IF DATABASE INSERT FAILS
-    |--------------------------------------------------------------------------
-    */
-
-    if (
-        $uploadedImagePath !== null &&
-        file_exists($uploadedImagePath)
-    ) {
-
-        unlink($uploadedImagePath);
-    }
-
 
     http_response_code(500);
 
@@ -610,9 +669,6 @@ try {
         'success' => false,
 
         'message' =>
-            'Unable to create product.'
+            'Unable to update product.'
     ]);
-
 }
-
-?>

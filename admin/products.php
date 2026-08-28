@@ -283,6 +283,7 @@ requireAdminLogin();
         .product-content {
 
             padding: 18px;
+
         }
 
         .product-category {
@@ -1232,6 +1233,16 @@ requireAdminLogin();
                 All Categories
             </option>
 
+            <option value="bag">
+                Bag
+            </option>
+
+            <option value="jewellery">
+                Jewellery
+            </option>
+            <option value="kurtis">
+                Kurtis
+            </option>
         </select>
 
 
@@ -1679,9 +1690,380 @@ requireAdminLogin();
 
 </div>
 
+
+<!-- =========================================================
+     EDIT PRODUCT MODAL
+========================================================= -->
+
+<div 
+    class="modal-overlay" 
+    id="editProductModal" 
+    aria-hidden="true"
+>
+
+    <div 
+        class="product-modal" 
+        role="dialog" 
+        aria-modal="true"
+        aria-labelledby="editProductModalTitle"
+    >
+
+        <!-- MODAL HEADER -->
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2 id="editProductModalTitle">
+                    Edit Product
+                </h2>
+
+                <p>
+                    Update your product information
+                </p>
+
+            </div>
+
+            <button
+                type="button"
+                class="modal-close-btn"
+                id="closeEditProductModal"
+                aria-label="Close"
+            >
+                &times;
+            </button>
+
+        </div>
+
+
+        <!-- MODAL BODY -->
+
+        <form
+            id="editProductForm"
+            enctype="multipart/form-data"
+        >
+
+            <!-- IMPORTANT: PRODUCT ID -->
+
+            <input
+                type="hidden"
+                id="editProductId"
+                name="id"
+            >
+
+
+            <div class="modal-body">
+
+                <!-- PRODUCT IMAGE -->
+
+                <div class="form-section">
+
+                    <label class="form-label">
+                        Product Image
+                    </label>
+
+                    <div class="image-upload-box">
+
+                        <div
+                            class="image-preview"
+                            id="editImagePreview"
+                        >
+                            <span>
+                                📷
+                            </span>
+
+                            <p>
+                                No image
+                            </p>
+                        </div>
+
+
+                        <div class="image-upload-content">
+
+                            <p class="upload-title">
+                                Change product image
+                            </p>
+
+                            <p class="upload-description">
+                                JPG, PNG or WEBP
+                            </p>
+
+                            <label
+                                for="editProductImage"
+                                class="upload-btn"
+                            >
+                                Choose Image
+                            </label>
+
+                            <input
+                                type="file"
+                                id="editProductImage"
+                                name="image"
+                                accept="image/jpeg,image/png,image/webp"
+                                hidden
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- BASIC INFORMATION -->
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label
+                            for="editProductName"
+                            class="form-label"
+                        >
+                            Product Name
+                            <span>*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="editProductName"
+                            name="name"
+                            class="form-input"
+                            maxlength="150"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label
+                            for="editProductCode"
+                            class="form-label"
+                        >
+                            Product Code / SKU
+                            <span>*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="editProductCode"
+                            name="product_code"
+                            class="form-input"
+                            maxlength="100"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label
+                            for="editProductCategory"
+                            class="form-label"
+                        >
+                            Category
+                            <span>*</span>
+                        </label>
+
+                        <select
+                            id="editProductCategory"
+                            name="category_id"
+                            class="form-input"
+                            required
+                        >
+
+                            <option value="">
+                                Select category
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label
+                            for="editProductStatus"
+                            class="form-label"
+                        >
+                            Status
+                        </label>
+
+                        <select
+                            id="editProductStatus"
+                            name="status"
+                            class="form-input"
+                        >
+
+                            <option value="active">
+                                Active
+                            </option>
+
+                            <option value="inactive">
+                                Inactive
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- DESCRIPTION -->
+
+                <div class="form-group">
+
+                    <label
+                        for="editProductDescription"
+                        class="form-label"
+                    >
+                        Description
+                    </label>
+
+                    <textarea
+                        id="editProductDescription"
+                        name="description"
+                        class="form-input form-textarea"
+                        rows="4"
+                    ></textarea>
+
+                </div>
+
+
+                <!-- PRICE / STOCK -->
+
+                <div class="form-grid three-columns">
+
+                    <div class="form-group">
+
+                        <label
+                            for="editProductPrice"
+                            class="form-label"
+                        >
+                            Price
+                            <span>*</span>
+                        </label>
+
+                        <div class="input-prefix">
+
+                            <span>₹</span>
+
+                            <input
+                                type="number"
+                                id="editProductPrice"
+                                name="price"
+                                class="form-input"
+                                min="0"
+                                step="0.01"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label
+                            for="editDiscountPrice"
+                            class="form-label"
+                        >
+                            Discount Price
+                        </label>
+
+                        <div class="input-prefix">
+
+                            <span>₹</span>
+
+                            <input
+                                type="number"
+                                id="editDiscountPrice"
+                                name="discount_price"
+                                class="form-input"
+                                min="0"
+                                step="0.01"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label
+                            for="editStockQuantity"
+                            class="form-label"
+                        >
+                            Stock Quantity
+                            <span>*</span>
+                        </label>
+
+                        <input
+                            type="number"
+                            id="editStockQuantity"
+                            name="stock_quantity"
+                            class="form-input"
+                            min="0"
+                            step="1"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- FOOTER -->
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    id="cancelEditProductModal"
+                >
+                    Cancel
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="save-product-btn"
+                    id="updateProductBtn"
+                >
+
+                    <span id="updateProductText">
+                        Update Product
+                    </span>
+
+                    <span
+                        id="updateProductLoader"
+                        class="button-loader"
+                        hidden
+                    ></span>
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
 </main>
-
-
 <script>
 
     /*
@@ -1718,6 +2100,111 @@ requireAdminLogin();
     const addProductBtn =
         document.getElementById(
             'addProductBtn'
+        );
+
+    const addProductModal =
+        document.getElementById(
+            'addProductModal'
+        );
+
+    const closeProductModal =
+        document.getElementById(
+            'closeProductModal'
+        );
+
+    const cancelProductModal =
+        document.getElementById(
+            'cancelProductModal'
+        );
+
+    const addProductForm =
+        document.getElementById(
+            'addProductForm'
+        );
+
+    const productImage =
+        document.getElementById(
+            'productImage'
+        );
+
+    const imagePreview =
+        document.getElementById(
+            'imagePreview'
+        );
+
+    const editProductModal =
+        document.getElementById(
+            'editProductModal'
+        );
+
+    const closeEditProductModal =
+        document.getElementById(
+            'closeEditProductModal'
+        );
+
+    const cancelEditProductModal =
+        document.getElementById(
+            'cancelEditProductModal'
+        );
+
+    const editProductForm =
+        document.getElementById(
+            'editProductForm'
+        );
+
+    const editProductId =
+        document.getElementById(
+            'editProductId'
+        );
+
+    const editProductImage =
+        document.getElementById(
+            'editProductImage'
+        );
+
+    const editImagePreview =
+        document.getElementById(
+            'editImagePreview'
+        );
+
+    const editProductName =
+        document.getElementById(
+            'editProductName'
+        );
+
+    const editProductCode =
+        document.getElementById(
+            'editProductCode'
+        );
+
+    const editProductCategory =
+        document.getElementById(
+            'editProductCategory'
+        );
+
+    const editProductStatus =
+        document.getElementById(
+            'editProductStatus'
+        );
+
+    const editProductDescription =
+        document.getElementById(
+            'editProductDescription'
+        );
+
+    const editProductPrice =
+        document.getElementById(
+            'editProductPrice'
+        );
+
+    const editDiscountPrice =
+        document.getElementById(
+            'editDiscountPrice'
+        );
+
+    const editStockQuantity =
+        document.getElementById(
+            'editStockQuantity'
         );
 
 
@@ -2130,339 +2617,866 @@ requireAdminLogin();
 
     loadProducts();
 
+
     /*
-|--------------------------------------------------------------------------
-| ADD PRODUCT MODAL
-|--------------------------------------------------------------------------
-*/
+    |--------------------------------------------------------------------------
+    | ADD PRODUCT MODAL
+    |--------------------------------------------------------------------------
+    */
 
-const addProductModal =
-    document.getElementById(
-        'addProductModal'
-    );
+    /*
+    |--------------------------------------------------------------------------
+    | OPEN MODAL
+    |--------------------------------------------------------------------------
+    */
 
-const closeProductModal =
-    document.getElementById(
-        'closeProductModal'
-    );
+    addProductBtn.addEventListener(
+        'click',
+        function () {
 
-const cancelProductModal =
-    document.getElementById(
-        'cancelProductModal'
-    );
+            addProductModal.classList.add(
+                'active'
+            );
 
-const addProductForm =
-    document.getElementById(
-        'addProductForm'
-    );
+            addProductModal.setAttribute(
+                'aria-hidden',
+                'false'
+            );
 
-const productImage =
-    document.getElementById(
-        'productImage'
-    );
+            document.body.style.overflow =
+                'hidden';
 
-const imagePreview =
-    document.getElementById(
-        'imagePreview'
+            loadCategories();
+        }
     );
 
 
-/*
-|--------------------------------------------------------------------------
-| OPEN MODAL
-|--------------------------------------------------------------------------
-*/
+    /*
+    |--------------------------------------------------------------------------
+    | CLOSE MODAL
+    |--------------------------------------------------------------------------
+    */
 
-addProductBtn.addEventListener(
-    'click',
-    function () {
+    function closeAddProductModal() {
 
-        addProductModal.classList.add(
+        addProductModal.classList.remove(
             'active'
         );
 
         addProductModal.setAttribute(
             'aria-hidden',
-            'false'
+            'true'
         );
 
         document.body.style.overflow =
-            'hidden';
+            '';
 
-        loadCategories();
+        addProductForm.reset();
+
+        imagePreview.innerHTML = `
+            <span>📷</span>
+            <p>No image selected</p>
+        `;
     }
-);
 
 
-/*
-|--------------------------------------------------------------------------
-| CLOSE MODAL
-|--------------------------------------------------------------------------
-*/
-
-function closeAddProductModal() {
-
-    addProductModal.classList.remove(
-        'active'
+    closeProductModal.addEventListener(
+        'click',
+        closeAddProductModal
     );
 
-    addProductModal.setAttribute(
-        'aria-hidden',
-        'true'
+
+    cancelProductModal.addEventListener(
+        'click',
+        closeAddProductModal
     );
 
-    document.body.style.overflow =
-        '';
 
-    addProductForm.reset();
+    /*
+    |--------------------------------------------------------------------------
+    | CLOSE WHEN CLICKING OUTSIDE
+    |--------------------------------------------------------------------------
+    */
 
-    imagePreview.innerHTML = `
-        <span>📷</span>
-        <p>No image selected</p>
-    `;
-}
+    addProductModal.addEventListener(
+        'click',
+        function (event) {
 
+            if (
+                event.target ===
+                addProductModal
+            ) {
 
-closeProductModal.addEventListener(
-    'click',
-    closeAddProductModal
-);
+                closeAddProductModal();
+            }
 
-
-cancelProductModal.addEventListener(
-    'click',
-    closeAddProductModal
-);
-
-
-/*
-|--------------------------------------------------------------------------
-| CLOSE WHEN CLICKING OUTSIDE
-|--------------------------------------------------------------------------
-*/
-
-addProductModal.addEventListener(
-    'click',
-    function (event) {
-
-        if (
-            event.target ===
-            addProductModal
-        ) {
-
-            closeAddProductModal();
         }
-
-    }
-);
+    );
 
 
-/*
-|--------------------------------------------------------------------------
-| ESC KEY
-|--------------------------------------------------------------------------
-*/
+    /*
+    |--------------------------------------------------------------------------
+    | ESC KEY
+    |--------------------------------------------------------------------------
+    */
 
-document.addEventListener(
-    'keydown',
-    function (event) {
+    document.addEventListener(
+        'keydown',
+        function (event) {
 
-        if (
-            event.key === 'Escape' &&
-            addProductModal.classList.contains(
-                'active'
-            )
-        ) {
+            if (
+                event.key !== 'Escape'
+            ) {
+                return;
+            }
 
-            closeAddProductModal();
+
+            if (
+                addProductModal.classList.contains(
+                    'active'
+                )
+            ) {
+
+                closeAddProductModal();
+
+                return;
+            }
+
+
+            if (
+                editProductModal.classList.contains(
+                    'active'
+                )
+            ) {
+
+                closeEditModal();
+
+            }
+
         }
-
-    }
-);
+    );
 
 
-/*
-|--------------------------------------------------------------------------
-| IMAGE PREVIEW
-|--------------------------------------------------------------------------
-*/
+    /*
+    |--------------------------------------------------------------------------
+    | IMAGE PREVIEW
+    |--------------------------------------------------------------------------
+    */
 
-productImage.addEventListener(
-    'change',
-    function () {
+    productImage.addEventListener(
+        'change',
+        function () {
 
-        const file =
-            this.files[0];
+            const file =
+                this.files[0];
 
-        if (!file) {
+            if (!file) {
 
-            imagePreview.innerHTML = `
-                <span>📷</span>
-                <p>No image selected</p>
+                imagePreview.innerHTML = `
+                    <span>📷</span>
+                    <p>No image selected</p>
+                `;
+
+                return;
+            }
+
+
+            const reader =
+                new FileReader();
+
+
+            reader.onload =
+                function (event) {
+
+                    imagePreview.innerHTML = `
+                        <img
+                            src="${event.target.result}"
+                            alt="Product preview"
+                        >
+                    `;
+                };
+
+
+            reader.readAsDataURL(file);
+        }
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | LOAD CATEGORIES
+    |--------------------------------------------------------------------------
+    */
+
+    async function loadCategories() {
+
+        try {
+
+            const response =
+                await fetch(
+                    '../api/categories.php'
+                );
+
+
+            const result =
+                await response.json();
+
+
+            if (!result.success) {
+
+                throw new Error(
+                    'Unable to load categories.'
+                );
+            }
+
+
+            categoryFilter.innerHTML = `
+                <option value="">
+                    All Categories
+                </option>
             `;
+
+
+            const productCategory =
+                document.getElementById(
+                    'productCategory'
+                );
+
+
+            productCategory.innerHTML = `
+                <option value="">
+                    Select category
+                </option>
+            `;
+
+
+            result.data.forEach(
+                function (category) {
+
+                    const option =
+                        document.createElement(
+                            'option'
+                        );
+
+                    option.value =
+                        category.id;
+
+                    option.textContent =
+                        category.name;
+
+                    productCategory.appendChild(
+                        option
+                    );
+
+
+                    const filterOption =
+                        document.createElement(
+                            'option'
+                        );
+
+                    filterOption.value =
+                        category.id;
+
+                    filterOption.textContent =
+                        category.name;
+
+                    categoryFilter.appendChild(
+                        filterOption
+                    );
+
+                }
+            );
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(
+                'Unable to load categories.'
+            );
+        }
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CREATE PRODUCT
+    |--------------------------------------------------------------------------
+    */
+
+    addProductForm.addEventListener(
+        'submit',
+        async function (event) {
+
+            event.preventDefault();
+
+            const saveProductBtn =
+                document.getElementById(
+                    'saveProductBtn'
+                );
+
+            const saveProductText =
+                document.getElementById(
+                    'saveProductText'
+                );
+
+            const saveProductLoader =
+                document.getElementById(
+                    'saveProductLoader'
+                );
+
+
+            saveProductBtn.disabled =
+                true;
+
+            saveProductText.textContent =
+                'Adding...';
+
+            saveProductLoader.hidden =
+                false;
+
+
+            try {
+
+                const formData =
+                    new FormData(
+                        addProductForm
+                    );
+
+
+                const response =
+                    await fetch(
+                        '../api/products-create.php',
+                        {
+                            method: 'POST',
+                            body: formData
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if (
+                    !response.ok ||
+                    !result.success
+                ) {
+
+                    throw new Error(
+                        result.message ||
+                        'Unable to create product.'
+                    );
+                }
+
+
+                alert(
+                    result.message ||
+                    'Product added successfully.'
+                );
+
+
+                closeAddProductModal();
+
+
+                loadProducts();
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                alert(
+                    error.message ||
+                    'Something went wrong.'
+                );
+
+
+            } finally {
+
+                saveProductBtn.disabled =
+                    false;
+
+                saveProductText.textContent =
+                    'Add Product';
+
+                saveProductLoader.hidden =
+                    true;
+            }
+
+        }
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | EDIT PRODUCT
+    |--------------------------------------------------------------------------
+    */
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | UPDATE PRODUCT
+    |--------------------------------------------------------------------------
+    */
+
+    editProductForm.addEventListener(
+        'submit',
+        async function (event) {
+
+            event.preventDefault();
+
+
+            const updateProductBtn =
+                document.getElementById(
+                    'updateProductBtn'
+                );
+
+
+            const updateProductText =
+                document.getElementById(
+                    'updateProductText'
+                );
+
+
+            const updateProductLoader =
+                document.getElementById(
+                    'updateProductLoader'
+                );
+
+
+            updateProductBtn.disabled =
+                true;
+
+
+            updateProductText.textContent =
+                'Updating...';
+
+
+            updateProductLoader.hidden =
+                false;
+
+
+            try {
+
+                const formData =
+                    new FormData(
+                        editProductForm
+                    );
+
+
+                const response =
+                    await fetch(
+                        '../api/products-update.php',
+                        {
+                            method: 'POST',
+                            body: formData
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if (
+                    !response.ok ||
+                    !result.success
+                ) {
+
+                    throw new Error(
+                        result.message ||
+                        'Unable to update product.'
+                    );
+
+                }
+
+
+                alert(
+                    result.message ||
+                    'Product updated successfully.'
+                );
+
+
+                closeEditModal();
+
+
+                /*
+                |--------------------------------------------------------------
+                | Refresh product cards
+                |--------------------------------------------------------------
+                */
+
+                loadProducts();
+
+
+            } catch (error) {
+
+                console.error(error);
+
+
+                alert(
+                    error.message ||
+                    'Something went wrong.'
+                );
+
+
+            } finally {
+
+                updateProductBtn.disabled =
+                    false;
+
+
+                updateProductText.textContent =
+                    'Update Product';
+
+
+                updateProductLoader.hidden =
+                    true;
+
+            }
+
+        }
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | OPEN EDIT MODAL
+    |--------------------------------------------------------------------------
+    */
+
+    async function openEditProductModal(productId) {
+
+        try {
+
+            /*
+            |------------------------------------------------------------------
+            | Load product from backend
+            |------------------------------------------------------------------
+            */
+
+            const response =
+                await fetch(
+                    `../api/products.php?id=${encodeURIComponent(productId)}`
+                );
+
+
+            const result =
+                await response.json();
+
+
+            if (
+                !response.ok ||
+                !result.success
+            ) {
+
+                throw new Error(
+                    result.message ||
+                    'Unable to load product.'
+                );
+
+            }
+
+
+            /*
+            |------------------------------------------------------------------
+            | Get product
+            |------------------------------------------------------------------
+            */
+
+            let product =
+                result.data;
+
+
+            /*
+            |------------------------------------------------------------------
+            | Some APIs return an array
+            |------------------------------------------------------------------
+            */
+
+            if (
+                Array.isArray(product)
+            ) {
+
+                product =
+                    product[0];
+
+            }
+
+
+            if (!product) {
+
+                throw new Error(
+                    'Product not found.'
+                );
+
+            }
+
+
+            /*
+            |------------------------------------------------------------------
+            | Fill form
+            |------------------------------------------------------------------
+            */
+
+            editProductId.value =
+                product.id;
+
+
+            editProductName.value =
+                product.name || '';
+
+
+            editProductCode.value =
+                product.product_code || '';
+
+
+            editProductCategory.innerHTML = `
+                <option value="">
+                    Select category
+                </option>
+            `;
+
+
+            /*
+            |------------------------------------------------------------------
+            | Load categories
+            |------------------------------------------------------------------
+            */
+
+            const categoryResponse =
+                await fetch(
+                    '../api/categories.php'
+                );
+
+
+            const categoryResult =
+                await categoryResponse.json();
+
+
+            if (
+                !categoryResult.success
+            ) {
+
+                throw new Error(
+                    'Unable to load categories.'
+                );
+
+            }
+
+
+            categoryResult.data.forEach(
+                function (category) {
+
+                    const option =
+                        document.createElement(
+                            'option'
+                        );
+
+                    option.value =
+                        category.id;
+
+                    option.textContent =
+                        category.name;
+
+                    editProductCategory.appendChild(
+                        option
+                    );
+
+                }
+            );
+
+
+            editProductCategory.value =
+                product.category_id || '';
+
+
+            editProductStatus.value =
+                product.status || 'active';
+
+
+            editProductDescription.value =
+                product.description || '';
+
+
+            editProductPrice.value =
+                product.price ?? '';
+
+
+            editDiscountPrice.value =
+                product.discount_price ?? '';
+
+
+            editStockQuantity.value =
+                product.stock_quantity ?? '';
+
+
+            /*
+            |------------------------------------------------------------------
+            | Existing image
+            |------------------------------------------------------------------
+            */
+
+            if (product.image) {
+
+                editImagePreview.innerHTML = `
+                    <img
+                        src="../assets/uploads/${escapeHTML(product.image)}"
+                        alt="${escapeHTML(product.name)}"
+                    >
+                `;
+
+            } else {
+
+                editImagePreview.innerHTML = `
+                    <span>📷</span>
+                    <p>No image</p>
+                `;
+
+            }
+
+
+            /*
+            |------------------------------------------------------------------
+            | Open modal
+            |------------------------------------------------------------------
+            */
+
+            editProductModal.classList.add(
+                'active'
+            );
+
+
+            editProductModal.setAttribute(
+                'aria-hidden',
+                'false'
+            );
+
+
+            document.body.style.overflow =
+                'hidden';
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(
+                error.message ||
+                'Unable to load product.'
+            );
+
+        }
+
+    }
+        /*
+    |--------------------------------------------------------------------------
+    | EDIT BUTTON CLICK
+    |--------------------------------------------------------------------------
+    */
+
+    productsGrid.addEventListener(
+        'click',
+        function (event) {
+
+            const editButton =
+                event.target.closest(
+                    '.edit-btn'
+                );
+
+
+            if (!editButton) {
+                return;
+            }
+
+
+            const productId =
+                editButton.dataset.id;
+
+
+            if (!productId) {
+
+                alert(
+                    'Product ID not found.'
+                );
+
+                return;
+            }
+
+
+            openEditProductModal(
+                productId
+            );
+
+        }
+    );
+
+/* =========================================================
+   DELETE PRODUCT
+========================================================= */
+
+productsGrid.addEventListener(
+    'click',
+    async function (event) {
+
+        const deleteButton =
+            event.target.closest(
+                '.delete-btn'
+            );
+
+
+        if (!deleteButton) {
+            return;
+        }
+
+
+        const productId =
+            deleteButton.dataset.id;
+
+
+        if (!productId) {
+
+            alert(
+                'Product ID not found.'
+            );
 
             return;
         }
 
 
-        const reader =
-            new FileReader();
-
-
-        reader.onload =
-            function (event) {
-
-                imagePreview.innerHTML = `
-                    <img
-                        src="${event.target.result}"
-                        alt="Product preview"
-                    >
-                `;
-            };
-
-
-        reader.readAsDataURL(file);
-    }
-);
-
-
-/*
-|--------------------------------------------------------------------------
-| LOAD CATEGORIES
-|--------------------------------------------------------------------------
-*/
-
-async function loadCategories() {
-
-    try {
-
-        const response =
-            await fetch(
-                '../api/categories.php'
+        const confirmed =
+            confirm(
+                'Are you sure you want to delete this product?'
             );
 
 
-        const result =
-            await response.json();
-
-
-        if (!result.success) {
-
-            throw new Error(
-                'Unable to load categories.'
-            );
+        if (!confirmed) {
+            return;
         }
 
 
-        categoryFilter.innerHTML = `
-            <option value="">
-                All Categories
-            </option>
-        `;
+        deleteButton.disabled = true;
 
-
-        const productCategory =
-            document.getElementById(
-                'productCategory'
-            );
-
-
-        productCategory.innerHTML = `
-            <option value="">
-                Select category
-            </option>
-        `;
-
-
-        result.data.forEach(
-            function (category) {
-
-                const option =
-                    document.createElement(
-                        'option'
-                    );
-
-                option.value =
-                    category.id;
-
-                option.textContent =
-                    category.name;
-
-                productCategory.appendChild(
-                    option
-                );
-
-
-                const filterOption =
-                    document.createElement(
-                        'option'
-                    );
-
-                filterOption.value =
-                    category.id;
-
-                filterOption.textContent =
-                    category.name;
-
-                categoryFilter.appendChild(
-                    filterOption
-                );
-
-            }
-        );
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert(
-            'Unable to load categories.'
-        );
-    }
-}
-
-
-        /* =========================================================
-   CREATE PRODUCT
-========================================================= */
-
-addProductForm.addEventListener(
-    'submit',
-    async function (event) {
-
-        event.preventDefault();
-
-        const saveProductBtn =
-            document.getElementById('saveProductBtn');
-
-        const saveProductText =
-            document.getElementById('saveProductText');
-
-        const saveProductLoader =
-            document.getElementById('saveProductLoader');
-
-
-        saveProductBtn.disabled = true;
-
-        saveProductText.textContent =
-            'Adding...';
-
-        saveProductLoader.hidden = false;
+        deleteButton.textContent =
+            'Deleting...';
 
 
         try {
 
             const formData =
-                new FormData(addProductForm);
+                new FormData();
 
-
-console.log('Image file:', productImage.files[0]);
-console.log('FormData image:', formData.get('image'));
+            formData.append(
+                'id',
+                productId
+            );
 
 
             const response =
                 await fetch(
-                    '../api/products-create.php',
+                    '../api/delete-product.php',
                     {
                         method: 'POST',
                         body: formData
@@ -2474,27 +3488,23 @@ console.log('FormData image:', formData.get('image'));
                 await response.json();
 
 
-            if (!response.ok || !result.success) {
+            if (
+                !response.ok ||
+                !result.success
+            ) {
 
                 throw new Error(
                     result.message ||
-                    'Unable to create product.'
+                    'Unable to delete product.'
                 );
             }
 
 
             alert(
                 result.message ||
-                'Product added successfully.'
+                'Product deleted successfully.'
             );
 
-
-            /* Close modal */
-
-            closeAddProductModal();
-
-
-            /* Refresh products */
 
             loadProducts();
 
@@ -2503,24 +3513,133 @@ console.log('FormData image:', formData.get('image'));
 
             console.error(error);
 
+
             alert(
                 error.message ||
-                'Something went wrong.'
+                'Something went wrong while deleting the product.'
             );
 
 
-        } finally {
+            deleteButton.disabled = false;
 
-            saveProductBtn.disabled = false;
-
-            saveProductText.textContent =
-                'Add Product';
-
-            saveProductLoader.hidden = true;
+            deleteButton.textContent =
+                'Delete';
         }
 
     }
 );
+
+    /*
+    |--------------------------------------------------------------------------
+    | CLOSE EDIT MODAL
+    |--------------------------------------------------------------------------
+    */
+
+    function closeEditModal() {
+
+        editProductModal.classList.remove(
+            'active'
+        );
+
+
+        editProductModal.setAttribute(
+            'aria-hidden',
+            'true'
+        );
+
+
+        document.body.style.overflow =
+            '';
+
+
+        editProductForm.reset();
+
+
+        editImagePreview.innerHTML = `
+            <span>📷</span>
+            <p>No image</p>
+        `;
+
+    }
+
+
+    closeEditProductModal.addEventListener(
+        'click',
+        closeEditModal
+    );
+
+
+    cancelEditProductModal.addEventListener(
+        'click',
+        closeEditModal
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CLICK OUTSIDE EDIT MODAL
+    |--------------------------------------------------------------------------
+    */
+
+    editProductModal.addEventListener(
+        'click',
+        function (event) {
+
+            if (
+                event.target ===
+                editProductModal
+            ) {
+
+                closeEditModal();
+
+            }
+
+        }
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | EDIT IMAGE PREVIEW
+    |--------------------------------------------------------------------------
+    */
+
+    editProductImage.addEventListener(
+        'change',
+        function () {
+
+            const file =
+                this.files[0];
+
+
+            if (!file) {
+
+                return;
+            }
+
+
+            const reader =
+                new FileReader();
+
+
+            reader.onload =
+                function (event) {
+
+                    editImagePreview.innerHTML = `
+                        <img
+                            src="${event.target.result}"
+                            alt="Product preview"
+                        >
+                    `;
+
+                };
+
+
+            reader.readAsDataURL(file);
+
+        }
+    );
+
 </script>
 
 </body>
