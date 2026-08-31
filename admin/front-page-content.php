@@ -2466,14 +2466,28 @@ $updatedAt =
 
                 <div>
 
-                    <h1 class="page-title">
+                    <h1 style="color: #e8eded;
+font-size: 15px; font-style: italic; font-weight: bold;
+background-color: #ca06ad;
+font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+border-radius: 7px; padding: 10px 18px; display: inline-block;
+
+-webkit-text-stroke: 0px #ffffff;">
 
                         Front Page Content
 
                     </h1>
 
 
-                    <p class="page-description">
+                    <p class="page-description" style="color: #db03db;
+font-size: 15px; font-style: italic;
+background-color: #f1f3f1;
+font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+border-radius: 8px; 
+padding: 12px 20px; 
+display: inline-block;
+box-shadow: 0 4px 12px rgba(3, 22, 144, 0.3);
+letter-spacing: 0.5px;">
 
                         Manage the main content displayed
                         on the Ssrini Handcrafts homepage.

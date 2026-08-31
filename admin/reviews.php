@@ -44,6 +44,9 @@ require_once __DIR__ . '/../includes/auth.php';
 requireAdminLogin();
 
 
+$pageTitle = 'Reviews';
+
+
 /*
 |--------------------------------------------------------------------------
 | SESSION
@@ -2184,6 +2187,16 @@ if (
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet"
+    >
+
+
+    <!--
+        Main Admin CSS
+    -->
+
+    <link
+        rel="stylesheet"
+        href="../assets/css/admin.css"
     >
 
 
@@ -4584,10 +4597,26 @@ if (
 </head>
 
 
-<body>
+<body><div class="admin-wrapper">
 
 
-<main class="reviews-page">
+    <?php
+    require_once __DIR__ . '/../includes/sidebar.php';
+    ?>
+
+
+    <main class="main-area">
+
+
+        <?php
+        require_once __DIR__ . '/../includes/header.php';
+        ?>
+
+
+        <div class="page-content">
+
+
+            <div class="reviews-page">
 
 
     <!-- =========================================================
@@ -6030,8 +6059,98 @@ if (
     </section>
 
 
-</main>
+            </div>
 
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
+
+
+<!-- =================================================
+     MOBILE SIDEBAR CONTROLS
+     ================================================= -->
+
+<div
+    class="mobile-sidebar-overlay"
+    id="mobileSidebarOverlay"
+>
+</div>
+
+
+<script>
+(function () {
+    "use strict";
+
+    const sidebar =
+        document.querySelector(".sidebar") ||
+        document.querySelector(".admin-sidebar") ||
+        document.querySelector(".side-bar") ||
+        document.querySelector(".admin-wrapper > aside");
+
+    const menuButton =
+        document.getElementById("mobileMenuButton");
+
+    const overlay =
+        document.getElementById("mobileSidebarOverlay");
+
+    if (!sidebar || !menuButton || !overlay) {
+        return;
+    }
+
+    function openSidebar() {
+        sidebar.classList.add("mobile-sidebar-open");
+        overlay.classList.add("active");
+        menuButton.setAttribute("aria-expanded", "true");
+        menuButton.innerHTML = "✕";
+        document.body.style.overflow = "hidden";
+    }
+
+    function closeSidebar() {
+        sidebar.classList.remove("mobile-sidebar-open");
+        overlay.classList.remove("active");
+        menuButton.setAttribute("aria-expanded", "false");
+        menuButton.innerHTML = "☰";
+        document.body.style.overflow = "";
+    }
+
+    menuButton.addEventListener("click", function () {
+        if (sidebar.classList.contains("mobile-sidebar-open")) {
+            closeSidebar();
+        } else {
+            openSidebar();
+        }
+    });
+
+    overlay.addEventListener("click", function () {
+        closeSidebar();
+    });
+
+    sidebar.addEventListener("click", function (event) {
+        const link = event.target.closest("a");
+        if (link && window.innerWidth <= 768) {
+            closeSidebar();
+        }
+    });
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape" && window.innerWidth <= 768) {
+            closeSidebar();
+        }
+    });
+
+    window.addEventListener("resize", function () {
+        if (window.innerWidth > 768) {
+            closeSidebar();
+        }
+    });
+})();
+</script>
 
 
 <!-- =============================================================

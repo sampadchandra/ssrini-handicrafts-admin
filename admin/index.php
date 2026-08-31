@@ -16,6 +16,7 @@ requireAdminLogin();
 /** 
  * Page title 
  */ 
+ 
 $pageTitle = 'Dashboard'; 
  
 ?> 
@@ -57,6 +58,718 @@ $pageTitle = 'Dashboard';
         rel="stylesheet" 
         href="../assets/css/admin.css" 
     > 
+
+
+    <!-- =================================================
+         DASHBOARD RESPONSIVE CSS
+         Only affects small/mobile screens.
+         Desktop design remains unchanged.
+         ================================================= -->
+
+    <style>
+
+        /* -----------------------------------------------
+           GLOBAL MOBILE SAFETY
+           ----------------------------------------------- */
+
+        html,
+        body {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+
+        /* -----------------------------------------------
+           MOBILE SIDEBAR CONTROL
+           ----------------------------------------------- */
+
+        .mobile-menu-button {
+            display: none;
+        }
+
+        .mobile-sidebar-overlay {
+            display: none;
+        }
+
+
+        /* -----------------------------------------------
+           HERO BANNER
+           ----------------------------------------------- */
+
+        .craft-hero {
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        .craft-hero-content {
+            min-width: 0;
+        }
+
+        .craft-hero-art {
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        .craft-hero-art img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+
+        /* -----------------------------------------------
+           DASHBOARD GRID
+           Recent Orders + Quick Actions
+           ----------------------------------------------- */
+
+        .page-content > section[style*="grid-template-columns"] {
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+        }
+
+
+        /* -----------------------------------------------
+           TABLE SAFETY
+           ----------------------------------------------- */
+
+        .table-wrapper {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .admin-table {
+            min-width: 650px;
+        }
+
+
+        /* -----------------------------------------------
+           MOBILE
+           ----------------------------------------------- */
+
+        @media (max-width: 768px) {
+
+
+            /* -------------------------------------------
+               MOBILE MENU BUTTON
+               ------------------------------------------- */
+
+            .mobile-menu-button {
+                display: flex !important;
+                position: fixed;
+                top: 14px;
+                left: 14px;
+                width: 42px;
+                height: 42px;
+                align-items: center;
+                justify-content: center;
+                border: 1px solid var(--border-light);
+                border-radius: 10px;
+                background: var(--surface);
+                color: var(--text-primary);
+                box-shadow: 0 5px 18px rgba(0, 0, 0, 0.12);
+                cursor: pointer;
+                z-index: 10002;
+                font-size: 20px;
+                line-height: 1;
+                padding: 0;
+            }
+
+            .mobile-menu-button:active {
+                transform: scale(0.96);
+            }
+
+
+            /* -------------------------------------------
+               MOBILE SIDEBAR
+               ------------------------------------------- */
+
+            .admin-wrapper {
+                width: 100%;
+                max-width: 100%;
+                min-height: 100vh;
+            }
+
+            .admin-wrapper > aside,
+            .admin-wrapper .sidebar,
+            .admin-wrapper .admin-sidebar,
+            .admin-wrapper .side-bar {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                bottom: 0 !important;
+                width: min(290px, 84vw) !important;
+                max-width: 84vw !important;
+                height: 100vh !important;
+                max-height: 100vh !important;
+                z-index: 10001 !important;
+                transform: translateX(-105%) !important;
+                transition: transform 0.28s ease !important;
+                overflow-y: auto !important;
+                overflow-x: hidden !important;
+                box-shadow: 12px 0 35px rgba(0, 0, 0, 0.15);
+            }
+
+            .admin-wrapper > aside.mobile-sidebar-open,
+            .admin-wrapper .sidebar.mobile-sidebar-open,
+            .admin-wrapper .admin-sidebar.mobile-sidebar-open,
+            .admin-wrapper .side-bar.mobile-sidebar-open {
+                transform: translateX(0) !important;
+            }
+
+
+            /* -------------------------------------------
+               SIDEBAR OVERLAY
+               ------------------------------------------- */
+
+            .mobile-sidebar-overlay {
+                position: fixed;
+                inset: 0;
+                display: block;
+                background: rgba(0, 0, 0, 0.35);
+                opacity: 0;
+                visibility: hidden;
+                pointer-events: none;
+                transition:
+                    opacity 0.28s ease,
+                    visibility 0.28s ease;
+                z-index: 10000;
+            }
+
+            .mobile-sidebar-overlay.active {
+                opacity: 1;
+                visibility: visible;
+                pointer-events: auto;
+            }
+
+
+            /* -------------------------------------------
+               MAIN AREA
+               ------------------------------------------- */
+
+            .main-area {
+                width: 100% !important;
+                max-width: 100% !important;
+                min-width: 0 !important;
+                margin-left: 0 !important;
+            }
+
+
+            /* -------------------------------------------
+               HEADER
+               ------------------------------------------- */
+
+            .top-header {
+                width: 100% !important;
+                max-width: 100% !important;
+                min-width: 0 !important;
+                padding-left: 68px !important;
+                padding-right: 12px !important;
+            }
+
+            .header-left,
+            .header-right {
+                min-width: 0;
+            }
+
+            .header-right {
+                max-width: 100%;
+            }
+
+            .profile {
+                min-width: 0;
+            }
+
+            .profile-info {
+                min-width: 0;
+            }
+
+
+            /* -------------------------------------------
+               PAGE CONTENT
+               ------------------------------------------- */
+
+            .page-content {
+                width: 100%;
+                max-width: 100%;
+                min-width: 0;
+                padding: 18px 14px !important;
+                box-sizing: border-box;
+            }
+
+
+            /* -------------------------------------------
+               PAGE HEADER
+               ------------------------------------------- */
+
+            .page-header {
+                width: 100%;
+                max-width: 100%;
+            }
+
+
+            /* -------------------------------------------
+               HERO
+               ------------------------------------------- */
+
+            .craft-hero {
+                width: 100%;
+                min-width: 0;
+                min-height: auto !important;
+                margin: 0 0 18px 0 !important;
+                border-radius: 18px !important;
+                overflow: hidden;
+                box-sizing: border-box;
+            }
+
+            .craft-hero-content {
+                width: 100%;
+                min-width: 0;
+                padding: 24px 20px !important;
+                box-sizing: border-box;
+            }
+
+            .craft-hero-content h1 {
+                font-size: clamp(26px, 8vw, 42px) !important;
+                line-height: 1.05 !important;
+                word-break: normal;
+                overflow-wrap: anywhere;
+            }
+
+            .craft-hero-content p {
+                font-size: 13px !important;
+                line-height: 1.5 !important;
+            }
+
+            .craft-hero-eyebrow {
+                font-size: 13px !important;
+            }
+
+            .craft-hero-divider {
+                max-width: 100%;
+            }
+
+            .craft-hero-art {
+                width: 100%;
+                max-width: 100%;
+                min-width: 0;
+            }
+
+            .craft-hero-art img {
+                display: block;
+                width: 100%;
+                max-width: 100%;
+                height: auto;
+                object-fit: cover;
+            }
+
+
+            /* -------------------------------------------
+               STATISTICS
+               ------------------------------------------- */
+
+            .stats-grid {
+                width: 100%;
+                max-width: 100%;
+                min-width: 0;
+                grid-template-columns: 1fr !important;
+                gap: 14px !important;
+            }
+
+            .stat-card {
+                width: 100%;
+                min-width: 0;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+
+
+            /* -------------------------------------------
+               RECENT ORDERS + QUICK ACTIONS
+               ------------------------------------------- */
+
+            .page-content > section[style*="grid-template-columns"] {
+                display: grid !important;
+                grid-template-columns: minmax(0, 1fr) !important;
+                width: 100%;
+                max-width: 100%;
+                min-width: 0;
+                gap: 16px !important;
+                margin-top: 16px;
+            }
+
+
+            /* -------------------------------------------
+               TABLE CARD
+               ------------------------------------------- */
+
+            .table-card {
+                width: 100%;
+                min-width: 0;
+                max-width: 100%;
+                box-sizing: border-box;
+                overflow: hidden;
+            }
+
+            .table-header {
+                padding: 16px !important;
+                gap: 12px;
+                flex-wrap: wrap;
+            }
+
+            .table-header > div {
+                min-width: 0;
+                max-width: 100%;
+            }
+
+            .table-header .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .table-title {
+                font-size: 16px !important;
+            }
+
+
+            /* -------------------------------------------
+               QUICK ACTIONS CARD
+               ------------------------------------------- */
+
+            .card {
+                width: 100%;
+                max-width: 100%;
+                min-width: 0;
+                box-sizing: border-box;
+            }
+
+            .card button {
+                width: 100%;
+                max-width: 100%;
+            }
+
+
+            /* -------------------------------------------
+               STORE STATUS
+               ------------------------------------------- */
+
+            .page-content > section[style*="margin-top: 20px"] {
+                width: 100%;
+                max-width: 100%;
+                min-width: 0;
+                margin-top: 16px !important;
+            }
+
+            .page-content > section[style*="margin-top: 20px"] .card {
+                width: 100%;
+                max-width: 100%;
+                min-width: 0;
+            }
+
+            .page-content > section[style*="margin-top: 20px"]
+            [style*="repeat"] {
+                grid-template-columns: 1fr !important;
+                width: 100%;
+                max-width: 100%;
+            }
+
+
+            /* -------------------------------------------
+               STORE STATUS HEADER
+               ------------------------------------------- */
+
+            .page-content > section[style*="margin-top: 20px"]
+            [style*="space-between"] {
+                align-items: flex-start !important;
+            }
+
+            .page-content > section[style*="margin-top: 20px"]
+            .badge {
+                width: 100%;
+                text-align: center;
+                box-sizing: border-box;
+            }
+
+
+            /* -------------------------------------------
+               EMPTY STATE
+               ------------------------------------------- */
+
+            .empty-state {
+                padding: 30px 16px !important;
+            }
+
+
+            /* -------------------------------------------
+               BUTTONS
+               ------------------------------------------- */
+
+            .btn {
+                min-height: 42px;
+                box-sizing: border-box;
+            }
+
+
+        }
+
+
+        /* -----------------------------------------------
+           SMALL MOBILE DEVICES
+           ----------------------------------------------- */
+
+        @media (max-width: 480px) {
+
+
+            .mobile-menu-button {
+                top: 10px;
+                left: 10px;
+                width: 40px;
+                height: 40px;
+            }
+
+
+            .top-header {
+                padding-left: 60px !important;
+                padding-right: 10px !important;
+            }
+
+
+            .page-content {
+                padding: 14px 10px !important;
+            }
+
+
+            .craft-hero {
+                border-radius: 16px !important;
+            }
+
+
+            .craft-hero-content {
+                padding: 20px 16px !important;
+            }
+
+
+            .craft-hero-content h1 {
+                font-size: 28px !important;
+            }
+
+
+            .craft-hero-content p {
+                font-size: 12px !important;
+            }
+
+
+            .stats-grid {
+                gap: 12px !important;
+            }
+
+
+            .stat-card {
+                padding: 16px !important;
+            }
+
+
+            .table-header {
+                padding: 14px !important;
+            }
+
+
+            .page-content > section[style*="margin-top: 20px"]
+            .card > div {
+                padding: 16px !important;
+            }
+
+
+        }
+
+
+        /* =========================================================
+   FINAL MOBILE SIDEBAR FIX
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    html,
+    body {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+    }
+
+    /* MOBILE MENU BUTTON */
+
+    #mobileMenuButton {
+        display: flex !important;
+        position: fixed !important;
+        top: 14px !important;
+        left: 14px !important;
+        width: 42px !important;
+        height: 42px !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border: 1px solid var(--border-light) !important;
+        border-radius: 10px !important;
+        background: var(--surface) !important;
+        color: var(--text-primary) !important;
+        cursor: pointer !important;
+        z-index: 99999 !important;
+        font-size: 20px !important;
+        line-height: 1 !important;
+        box-shadow: 0 5px 18px rgba(0,0,0,.15) !important;
+    }
+
+
+    /* SIDEBAR */
+
+    .admin-wrapper > aside,
+    .admin-wrapper .sidebar,
+    .admin-wrapper .admin-sidebar,
+    .admin-wrapper .side-bar {
+
+        position: fixed !important;
+
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+
+        width: min(290px, 84vw) !important;
+        max-width: 84vw !important;
+
+        height: 100vh !important;
+        max-height: 100vh !important;
+
+        margin: 0 !important;
+
+        z-index: 99998 !important;
+
+        transform: translateX(-110%) !important;
+
+        visibility: hidden !important;
+
+        opacity: 1 !important;
+
+        transition:
+            transform .3s ease,
+            visibility .3s ease !important;
+
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+
+        box-shadow: 12px 0 35px rgba(0,0,0,.25) !important;
+    }
+
+
+    /* SIDEBAR OPEN */
+
+    body.sidebar-mobile-open .admin-wrapper > aside,
+    body.sidebar-mobile-open .admin-wrapper .sidebar,
+    body.sidebar-mobile-open .admin-wrapper .admin-sidebar,
+    body.sidebar-mobile-open .admin-wrapper .side-bar,
+
+    .admin-wrapper > aside.mobile-sidebar-open,
+    .admin-wrapper .sidebar.mobile-sidebar-open,
+    .admin-wrapper .admin-sidebar.mobile-sidebar-open,
+    .admin-wrapper .side-bar.mobile-sidebar-open {
+
+        transform: translateX(0) !important;
+
+        visibility: visible !important;
+
+        opacity: 1 !important;
+
+        z-index: 99998 !important;
+    }
+
+
+    /* OVERLAY */
+
+    #mobileSidebarOverlay {
+
+        position: fixed !important;
+
+        inset: 0 !important;
+
+        width: 100vw !important;
+        height: 100vh !important;
+
+        display: block !important;
+
+        background: rgba(0,0,0,.45) !important;
+
+        opacity: 0 !important;
+
+        visibility: hidden !important;
+
+        pointer-events: none !important;
+
+        z-index: 99997 !important;
+
+        transition:
+            opacity .3s ease,
+            visibility .3s ease !important;
+    }
+
+
+    /* OVERLAY OPEN */
+
+    body.sidebar-mobile-open #mobileSidebarOverlay,
+    #mobileSidebarOverlay.active {
+
+        opacity: 1 !important;
+
+        visibility: visible !important;
+
+        pointer-events: auto !important;
+    }
+
+
+    /* MAIN AREA */
+
+    .main-area {
+
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        min-width: 0 !important;
+
+        margin-left: 0 !important;
+    }
+
+
+    /* PREVENT PAGE MOVEMENT */
+
+    body.sidebar-mobile-open {
+
+        overflow: hidden !important;
+    }
+
+}
+
+
+@media (min-width: 769px) {
+
+    #mobileMenuButton,
+    #mobileSidebarOverlay {
+
+        display: none !important;
+    }
+
+}
+
+    </style>
  
 </head> 
  
@@ -112,53 +825,49 @@ $pageTitle = 'Dashboard';
             <section class="page-header"> 
  
  
-                <div> 
- 
-                    <h1 class="page-title"> 
- 
-                        Dashboard 
- 
-                    </h1> 
- 
- 
-                    <p class="page-description"> 
- 
-                        Welcome back, 
-                        <?= htmlspecialchars( 
-                            $_SESSION['admin_name'] ?? 'Admin', 
-                            ENT_QUOTES, 
-                            'UTF-8' 
-                        ) ?>. 
- 
-                        Here's what's happening 
-                        with your store. 
- 
-                    </p> 
- 
-                </div> 
- 
- 
-                <div> 
- 
-                    <button 
-                        type="button" 
-                        class="btn btn-primary" 
-                        id="dashboardRefreshButton" 
-                    > 
- 
-                        🔄 
- 
-                        Refresh Dashboard 
- 
-                    </button> 
- 
-                </div> 
- 
- 
             </section> 
  
  
- 
+        <!-- =========================================
+     SSRINI HANDICRAFT HERO BANNER
+     ========================================= -->
+
+<section class="craft-hero">
+
+    <div class="craft-hero-content">
+
+        <div class="craft-hero-eyebrow">
+            ✦ Welcome back,
+        </div>
+
+        <h1>
+            SSRINI HANDICRAFTS
+        </h1>
+
+        <p>
+            Empowering rural artisans of Bengal.
+        </p>
+
+        <div class="craft-hero-divider">
+            <span></span>
+            ✦
+            <span></span>
+        </div>
+
+    </div>
+
+    <div class="craft-hero-art">
+        <img
+            src="../assets/images/folk-art.png"
+            alt="Ssrini Handicrafts Folk Art"
+        >
+    </div>
+
+</section>
+
+
+
+
             <!-- ========================================= 
                  STATISTICS 
                  ========================================= --> 
@@ -867,7 +1576,204 @@ $pageTitle = 'Dashboard';
         </div> 
  
  
+ 
     </main> 
  
  
-</div> 
+</div>
+
+<div
+    class="mobile-sidebar-overlay"
+    id="mobileSidebarOverlay"
+    aria-hidden="true"
+></div>
+
+
+<script>
+
+(function () {
+
+    "use strict";
+
+
+    /* -----------------------------------------------
+       FIND SIDEBAR
+       ----------------------------------------------- */
+
+    const sidebar =
+        document.querySelector(".sidebar") ||
+        document.querySelector(".admin-sidebar") ||
+        document.querySelector(".side-bar") ||
+        document.querySelector(".admin-wrapper > aside");
+
+
+    const menuButton =
+        document.getElementById("mobileMenuButton");
+
+
+    const overlay =
+        document.getElementById("mobileSidebarOverlay");
+
+
+    if (!sidebar || !menuButton || !overlay) {
+        return;
+    }
+
+
+    /* -----------------------------------------------
+       OPEN SIDEBAR
+       ----------------------------------------------- */
+
+    function openSidebar() {
+
+        sidebar.classList.add("mobile-sidebar-open");
+
+        overlay.classList.add("active");
+
+        menuButton.setAttribute(
+            "aria-expanded",
+            "true"
+        );
+
+        menuButton.innerHTML = "✕";
+
+        document.body.style.overflow = "hidden";
+    }
+
+
+    /* -----------------------------------------------
+       CLOSE SIDEBAR
+       ----------------------------------------------- */
+
+    function closeSidebar() {
+
+        sidebar.classList.remove(
+            "mobile-sidebar-open"
+        );
+
+        overlay.classList.remove("active");
+
+        menuButton.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+        menuButton.innerHTML = "☰";
+
+        document.body.style.overflow = "";
+    }
+
+
+    /* -----------------------------------------------
+       TOGGLE SIDEBAR
+       ----------------------------------------------- */
+
+    menuButton.addEventListener(
+        "click",
+        function () {
+
+            if (
+                sidebar.classList.contains(
+                    "mobile-sidebar-open"
+                )
+            ) {
+
+                closeSidebar();
+
+            } else {
+
+                openSidebar();
+
+            }
+
+        }
+    );
+
+
+    /* -----------------------------------------------
+       OVERLAY CLOSE
+       ----------------------------------------------- */
+
+    overlay.addEventListener(
+        "click",
+        function () {
+
+            closeSidebar();
+
+        }
+    );
+
+
+    /* -----------------------------------------------
+       SIDEBAR LINK CLOSE
+       ----------------------------------------------- */
+
+    sidebar.addEventListener(
+        "click",
+        function (event) {
+
+            const link =
+                event.target.closest("a");
+
+            if (!link) {
+                return;
+            }
+
+            if (
+                window.innerWidth <= 768
+            ) {
+
+                closeSidebar();
+
+            }
+
+        }
+    );
+
+
+    /* -----------------------------------------------
+       ESC KEY
+       ----------------------------------------------- */
+
+    document.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (
+                event.key === "Escape" &&
+                window.innerWidth <= 768
+            ) {
+
+                closeSidebar();
+
+            }
+
+        }
+    );
+
+
+    /* -----------------------------------------------
+       WINDOW RESIZE
+       ----------------------------------------------- */
+
+    window.addEventListener(
+        "resize",
+        function () {
+
+            if (window.innerWidth > 768) {
+
+                closeSidebar();
+
+            }
+
+        }
+    );
+
+
+})();
+
+</script>
+
+</body>
+
+</html>

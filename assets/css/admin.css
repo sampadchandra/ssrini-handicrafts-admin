@@ -1896,3 +1896,356 @@ textarea.form-control {
             24px;
     }
 }
+
+/* =========================================================
+   SSRINI HANDICRAFTS - CRAFT HERO BANNER
+   ========================================================= */
+
+.craft-hero {
+    position: relative;
+    width: 100%;
+    min-height: 270px;
+
+    display: flex;
+    align-items: stretch;
+
+    overflow: hidden;
+
+    margin-bottom: 24px;
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #fff8ee 0%,
+            #fff6e9 42%,
+            #f8eee1 72%,
+            #f2e6d7 100%
+        );
+
+    border: 1px solid rgba(130, 87, 55, 0.08);
+
+    box-shadow:
+        0 8px 30px rgba(40, 30, 20, 0.06);
+}
+
+
+/* -----------------------------------------
+   LEFT TEXT AREA
+   ----------------------------------------- */
+
+.craft-hero-content {
+    position: relative;
+    z-index: 3;
+
+    width: 52%;
+
+    padding: 42px 35px 38px 38px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+.craft-hero-eyebrow {
+    color: #d94b68;
+
+    font-size: 17px;
+
+    font-weight: 600;
+
+    margin-bottom: 12px;
+
+    letter-spacing: 0.2px;
+}
+
+
+.craft-hero-content h1 {
+    margin: 0;
+
+    color: #171717;
+
+    font-family:
+        Georgia,
+        'Times New Roman',
+        serif;
+
+    font-size: clamp(32px, 3vw, 50px);
+
+    font-weight: 800;
+
+    line-height: 1.05;
+
+    letter-spacing: 1px;
+}
+
+
+.craft-hero-content p {
+    margin: 16px 0 0;
+
+    color: #3f3732;
+
+    font-family:
+        Georgia,
+        'Times New Roman',
+        serif;
+
+    font-size: 19px;
+
+    line-height: 1.5;
+
+    font-weight: 500;
+}
+
+
+/* -----------------------------------------
+   DECORATIVE DIVIDER
+   ----------------------------------------- */
+
+.craft-hero-divider {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: 22px;
+
+    color: #d94b68;
+
+    font-size: 17px;
+
+    width: 260px;
+}
+
+
+.craft-hero-divider span {
+    height: 1px;
+
+    flex: 1;
+
+    background: #d99a88;
+
+    opacity: 0.7;
+}
+
+
+/* -----------------------------------------
+   ARTWORK AREA
+   ----------------------------------------- */
+
+.craft-hero-art {
+    position: absolute;
+
+    right: 0;
+    top: 0;
+
+    width: 52%;
+    height: 100%;
+
+    overflow: hidden;
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    align-items: center;
+}
+
+
+.craft-hero-art::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 0;
+
+    width: 180px;
+    height: 100%;
+
+    z-index: 2;
+
+    background:
+        linear-gradient(
+            90deg,
+            #fff7eb 0%,
+            rgba(255, 247, 235, 0.85) 20%,
+            rgba(255, 247, 235, 0) 100%
+        );
+}
+
+
+.craft-hero-art img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    object-position: center;
+
+    display: block;
+
+    opacity: 0.95;
+
+    filter: saturate(0.85) contrast(0.95);
+
+    mix-blend-mode: multiply;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+    .craft-hero {
+        min-height: 250px;
+    }
+
+    .craft-hero-content {
+        width: 58%;
+
+        padding: 35px 25px;
+    }
+
+    .craft-hero-art {
+        width: 48%;
+    }
+
+    .craft-hero-content h1 {
+        font-size: 34px;
+    }
+
+    .craft-hero-content p {
+        font-size: 16px;
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    .craft-hero {
+        min-height: 420px;
+
+        display: block;
+    }
+
+    .craft-hero-content {
+        width: 100%;
+
+        min-height: 220px;
+
+        padding: 30px 25px;
+
+        justify-content: flex-start;
+    }
+
+    .craft-hero-content h1 {
+        font-size: 32px;
+    }
+
+    .craft-hero-content p {
+        font-size: 16px;
+    }
+
+    .craft-hero-art {
+        position: absolute;
+
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        top: auto;
+
+        width: 100%;
+        height: 210px;
+    }
+
+    .craft-hero-art::before {
+        width: 100%;
+        height: 100%;
+
+        background:
+            linear-gradient(
+                180deg,
+                #fff7eb 0%,
+                rgba(255, 247, 235, 0.2) 50%,
+                rgba(255, 247, 235, 0) 100%
+            );
+    }
+}
+
+/* =========================================================
+   SsRini Handicrafts - Dashboard Folk Art Background
+   30% Blended Artwork
+   ---------------------------------------------------------
+   • Dashboard main content only
+   • Sidebar remains completely untouched
+   • Header remains untouched
+   • Existing Ganesh Ji hero remains untouched
+   • Artwork stays behind all dashboard content
+   • Artwork scrolls naturally with the page
+   ========================================================= */
+
+.page-content {
+    position: relative;
+    isolation: isolate;
+
+    /* Allow the artwork to show behind the dashboard */
+    background: transparent;
+}
+
+
+/* =========================================================
+   FOLK ART BACKGROUND
+   ========================================================= */
+
+.page-content::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background-image:
+        linear-gradient(
+            rgba(247, 245, 251, 0.30),
+            rgba(247, 245, 251, 0.30)
+        ),
+        url("../images/folk-art-bg.jpg");
+
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+
+    /* Image moves naturally while scrolling */
+    background-attachment: scroll;
+
+    pointer-events: none;
+
+    z-index: -1;
+}
+
+
+/* =========================================================
+   KEEP EXISTING DASHBOARD CONTENT ABOVE ARTWORK
+   ========================================================= */
+
+.page-content > * {
+    position: relative;
+    z-index: 1;
+}
+
+
+/* =========================================================
+   GANESH JI HERO — DO NOT BLEND / DO NOT CHANGE
+   ========================================================= */
+
+.page-content .craft-hero {
+    position: relative;
+    z-index: 2;
+}
+

@@ -41,9 +41,9 @@
 
 
 /*
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 | DATABASE + AUTHENTICATION
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 */
 
 
@@ -55,9 +55,9 @@ requireAdminLogin();
 
 
 /*
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 | SESSION
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 */
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
@@ -66,9 +66,18 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 
 
 /*
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
+| PAGE TITLE
+|-------------------------------------------------------------------------- 
+*/
+
+$pageTitle = 'Notifications';
+
+
+/*
+|-------------------------------------------------------------------------- 
 | CSRF TOKEN
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 */
 
 if (empty($_SESSION['csrf_token'])) {
@@ -79,9 +88,9 @@ $csrfToken = $_SESSION['csrf_token'];
 
 
 /*
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 | HELPER FUNCTIONS
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 */
 
 function e($value)
@@ -125,9 +134,9 @@ function getFlash()
 
 
 /*
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 | VERIFY CSRF
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 */
 
 function verifyCsrf($token)
@@ -141,9 +150,9 @@ function verifyCsrf($token)
 
 
 /*
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 | FORMAT DATE
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 */
 
 function formatNotificationDate($date)
@@ -163,9 +172,9 @@ function formatNotificationDate($date)
 
 
 /*
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 | GET NOTIFICATION ICON
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 */
 
 function getNotificationIcon($type)
@@ -211,9 +220,9 @@ function getNotificationIcon($type)
 
 
 /*
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 | GET NOTIFICATION TYPE LABEL
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 */
 
 function getNotificationTypeLabel($type)
@@ -235,9 +244,9 @@ function getNotificationTypeLabel($type)
 
 
 /*
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 | GET NOTIFICATION TYPE CLASS
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 */
 
 function getNotificationTypeClass($type)
@@ -283,9 +292,9 @@ function getNotificationTypeClass($type)
 
 
 /*
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 | PROCESS ACTIONS
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 */
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -308,9 +317,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
 
         /*
-        |--------------------------------------------------------------------------
+        |-------------------------------------------------------------------------- 
         | MARK SINGLE NOTIFICATION AS READ
-        |--------------------------------------------------------------------------
+        |-------------------------------------------------------------------------- 
         */
 
         if ($action === 'mark_read') {
@@ -352,9 +361,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
         /*
-        |--------------------------------------------------------------------------
+        |-------------------------------------------------------------------------- 
         | MARK SINGLE NOTIFICATION AS UNREAD
-        |--------------------------------------------------------------------------
+        |-------------------------------------------------------------------------- 
         */
 
         if ($action === 'mark_unread') {
@@ -396,9 +405,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
         /*
-        |--------------------------------------------------------------------------
+        |-------------------------------------------------------------------------- 
         | MARK ALL AS READ
-        |--------------------------------------------------------------------------
+        |-------------------------------------------------------------------------- 
         */
 
         if ($action === 'mark_all_read') {
@@ -424,9 +433,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
         /*
-        |--------------------------------------------------------------------------
+        |-------------------------------------------------------------------------- 
         | DELETE SINGLE NOTIFICATION
-        |--------------------------------------------------------------------------
+        |-------------------------------------------------------------------------- 
         */
 
         if ($action === 'delete') {
@@ -467,9 +476,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
         /*
-        |--------------------------------------------------------------------------
+        |-------------------------------------------------------------------------- 
         | DELETE ALL READ NOTIFICATIONS
-        |--------------------------------------------------------------------------
+        |-------------------------------------------------------------------------- 
         */
 
         if ($action === 'delete_read') {
@@ -494,9 +503,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
         /*
-        |--------------------------------------------------------------------------
+        |-------------------------------------------------------------------------- 
         | UNKNOWN ACTION
-        |--------------------------------------------------------------------------
+        |-------------------------------------------------------------------------- 
         */
 
         setFlash(
@@ -520,9 +529,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 /*
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 | FILTERS
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 */
 
 $search = trim(
@@ -535,9 +544,9 @@ $typeFilter = $_GET['type'] ?? 'all';
 
 
 /*
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 | NORMALIZE STATUS
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 */
 
 $allowedStatuses = [
@@ -552,9 +561,9 @@ if (!in_array($statusFilter, $allowedStatuses, true)) {
 
 
 /*
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 | GET NOTIFICATION TYPES
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 */
 
 $notificationTypes = [];
@@ -582,9 +591,9 @@ try {
 
 
 /*
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 | BUILD NOTIFICATION QUERY
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 */
 
 $where = [];
@@ -593,9 +602,9 @@ $params = [];
 
 
 /*
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 | SEARCH
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 */
 
 if ($search !== '') {
@@ -613,9 +622,9 @@ if ($search !== '') {
 
 
 /*
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 | READ / UNREAD FILTER
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 */
 
 if ($statusFilter === 'unread') {
@@ -631,9 +640,9 @@ elseif ($statusFilter === 'read') {
 
 
 /*
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 | TYPE FILTER
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 */
 
 if ($typeFilter !== 'all') {
@@ -645,9 +654,9 @@ if ($typeFilter !== 'all') {
 
 
 /*
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 | WHERE SQL
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 */
 
 $whereSql = '';
@@ -662,9 +671,9 @@ if (!empty($where)) {
 
 
 /*
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 | FETCH NOTIFICATIONS
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 */
 
 $notifications = [];
@@ -679,9 +688,9 @@ $readNotifications = 0;
 try {
 
     /*
-    |--------------------------------------------------------------------------
+    |-------------------------------------------------------------------------- 
     | TOTAL COUNT
-    |--------------------------------------------------------------------------
+    |-------------------------------------------------------------------------- 
     */
 
     $countStmt = $pdo->prepare(
@@ -698,9 +707,9 @@ try {
 
 
     /*
-    |--------------------------------------------------------------------------
+    |-------------------------------------------------------------------------- 
     | UNREAD COUNT
-    |--------------------------------------------------------------------------
+    |-------------------------------------------------------------------------- 
     */
 
     $unreadStmt = $pdo->query(
@@ -715,9 +724,9 @@ try {
 
 
     /*
-    |--------------------------------------------------------------------------
+    |-------------------------------------------------------------------------- 
     | READ COUNT
-    |--------------------------------------------------------------------------
+    |-------------------------------------------------------------------------- 
     */
 
     $readStmt = $pdo->query(
@@ -732,9 +741,9 @@ try {
 
 
     /*
-    |--------------------------------------------------------------------------
+    |-------------------------------------------------------------------------- 
     | FETCH DATA
-    |--------------------------------------------------------------------------
+    |-------------------------------------------------------------------------- 
     */
 
     $notificationStmt = $pdo->prepare(
@@ -769,9 +778,9 @@ try {
 
 
 /*
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 | FLASH MESSAGE
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 */
 
 $flash = getFlash();
@@ -808,6 +817,14 @@ $flash = getFlash();
     <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+
+    <!-- MAIN ADMIN CSS -->
+
+    <link
+        rel="stylesheet"
+        href="../assets/css/admin.css"
     >
 
 
@@ -2412,726 +2429,339 @@ $flash = getFlash();
 <body>
 
 
-<div class="page">
+<div class="admin-wrapper">
 
 
-    <!-- ========================================================
-         PAGE HEADER
-    ========================================================= -->
+    <!-- =================================================
+         SIDEBAR
+         ================================================= -->
 
-    <header class="page-header">
+    <?php
 
-        <div class="title-area">
+    require_once __DIR__ .
+        '/../includes/sidebar.php';
 
-            <h1>
-                Notifications
-            </h1>
+    ?>
 
-            <p>
-                Manage store alerts, orders, reviews and system notifications.
-            </p>
 
-        </div>
+    <!-- =================================================
+         MAIN AREA
+         ================================================= -->
 
+    <main class="main-area">
 
-        <div class="header-actions">
 
-            <a
-                href="index.php"
-                class="btn btn-light"
-            >
+        <!-- =============================================
+             TOP HEADER
+             ============================================= -->
 
-                <i class="fa-solid fa-arrow-left"></i>
+        <?php
 
-                Dashboard
+        require_once __DIR__ .
+            '/../includes/header.php';
 
-            </a>
+        ?>
 
-        </div>
 
-    </header>
+        <!-- =============================================
+             PAGE CONTENT
+             ============================================= -->
 
+        <div class="page-content">
 
 
-    <!-- ========================================================
-         FLASH MESSAGE
-    ========================================================= -->
+            <div class="page">
 
-    <?php if ($flash): ?>
 
-        <div
-            class="flash <?= e($flash['type']) ?>"
-            id="flashMessage"
-        >
+                <!-- ========================================================
+                     PAGE HEADER
+                ========================================================= -->
 
-            <?php if ($flash['type'] === 'success'): ?>
+                <header class="page-header">
 
-                <i class="fa-solid fa-circle-check"></i>
+                    <div class="title-area">
 
-            <?php else: ?>
+                        <h1>
+                            Notifications
+                        </h1>
 
-                <i class="fa-solid fa-circle-exclamation"></i>
-
-            <?php endif; ?>
-
-
-            <span>
-                <?= e($flash['message']) ?>
-            </span>
-
-        </div>
-
-    <?php endif; ?>
-
-
-
-    <!-- ========================================================
-         STATISTICS
-    ========================================================= -->
-
-    <section class="stats-grid">
-
-
-        <!-- TOTAL -->
-
-        <div class="stat-card">
-
-            <div class="stat-icon total">
-
-                <i class="fa-solid fa-bell"></i>
-
-            </div>
-
-            <div class="stat-info">
-
-                <span>
-                    Total Notifications
-                </span>
-
-                <strong>
-                    <?= number_format($totalNotifications) ?>
-                </strong>
-
-            </div>
-
-        </div>
-
-
-        <!-- UNREAD -->
-
-        <div class="stat-card">
-
-            <div class="stat-icon unread">
-
-                <i class="fa-solid fa-envelope"></i>
-
-            </div>
-
-            <div class="stat-info">
-
-                <span>
-                    Unread Notifications
-                </span>
-
-                <strong>
-                    <?= number_format($unreadNotifications) ?>
-                </strong>
-
-            </div>
-
-        </div>
-
-
-        <!-- READ -->
-
-        <div class="stat-card">
-
-            <div class="stat-icon read">
-
-                <i class="fa-solid fa-envelope-open"></i>
-
-            </div>
-
-            <div class="stat-info">
-
-                <span>
-                    Read Notifications
-                </span>
-
-                <strong>
-                    <?= number_format($readNotifications) ?>
-                </strong>
-
-            </div>
-
-        </div>
-
-
-    </section>
-
-
-
-    <!-- ========================================================
-         MAIN NOTIFICATION CARD
-    ========================================================= -->
-
-    <section class="notifications-card">
-
-
-        <!-- ====================================================
-             FILTER BAR
-        ===================================================== -->
-
-        <form
-            method="GET"
-            action="notifications.php"
-            class="filter-bar"
-        >
-
-
-            <!-- SEARCH -->
-
-            <div class="search-wrapper">
-
-                <i class="fa-solid fa-magnifying-glass"></i>
-
-                <input
-                    type="search"
-                    name="search"
-                    placeholder="Search notifications..."
-                    value="<?= e($search) ?>"
-                >
-
-            </div>
-
-
-            <!-- STATUS -->
-
-            <select
-                name="status"
-                class="filter-select"
-            >
-
-                <option
-                    value="all"
-                    <?= $statusFilter === 'all' ? 'selected' : '' ?>
-                >
-                    All Notifications
-                </option>
-
-                <option
-                    value="unread"
-                    <?= $statusFilter === 'unread' ? 'selected' : '' ?>
-                >
-                    Unread
-                </option>
-
-                <option
-                    value="read"
-                    <?= $statusFilter === 'read' ? 'selected' : '' ?>
-                >
-                    Read
-                </option>
-
-            </select>
-
-
-            <!-- TYPE -->
-
-            <select
-                name="type"
-                class="filter-select"
-            >
-
-                <option value="all">
-                    All Types
-                </option>
-
-
-                <?php foreach ($notificationTypes as $notificationType): ?>
-
-                    <option
-                        value="<?= e($notificationType) ?>"
-                        <?= $typeFilter === $notificationType ? 'selected' : '' ?>
-                    >
-                        <?= e(
-                            getNotificationTypeLabel(
-                                $notificationType
-                            )
-                        ) ?>
-                    </option>
-
-                <?php endforeach; ?>
-
-            </select>
-
-
-            <!-- APPLY -->
-
-            <button
-                type="submit"
-                class="filter-btn"
-            >
-
-                <i class="fa-solid fa-filter"></i>
-
-                Filter
-
-            </button>
-
-
-        </form>
-
-
-
-        <!-- ====================================================
-             TOOLBAR
-        ===================================================== -->
-
-        <div class="toolbar">
-
-
-            <div class="toolbar-left">
-
-                Showing
-
-                <strong>
-                    <?= number_format($totalNotifications) ?>
-                </strong>
-
-                notification(s)
-
-            </div>
-
-
-            <div class="toolbar-actions">
-
-
-                <!-- MARK ALL READ -->
-
-                <form
-                    method="POST"
-                    action="notifications.php"
-                    onsubmit="
-                        return confirm(
-                            'Mark all notifications as read?'
-                        );
-                    "
-                >
-
-                    <input
-                        type="hidden"
-                        name="csrf_token"
-                        value="<?= e($csrfToken) ?>"
-                    >
-
-                    <input
-                        type="hidden"
-                        name="action"
-                        value="mark_all_read"
-                    >
-
-                    <button
-                        type="submit"
-                        class="small-btn read-all"
-                    >
-
-                        <i class="fa-solid fa-check-double"></i>
-
-                        Mark All Read
-
-                    </button>
-
-                </form>
-
-
-                <!-- DELETE READ -->
-
-                <form
-                    method="POST"
-                    action="notifications.php"
-                    onsubmit="
-                        return confirm(
-                            'Delete all read notifications? This action cannot be undone.'
-                        );
-                    "
-                >
-
-                    <input
-                        type="hidden"
-                        name="csrf_token"
-                        value="<?= e($csrfToken) ?>"
-                    >
-
-                    <input
-                        type="hidden"
-                        name="action"
-                        value="delete_read"
-                    >
-
-                    <button
-                        type="submit"
-                        class="small-btn delete-read"
-                    >
-
-                        <i class="fa-solid fa-trash"></i>
-
-                        Delete Read
-
-                    </button>
-
-                </form>
-
-
-            </div>
-
-        </div>
-
-
-
-        <!-- ====================================================
-             DATABASE ERROR
-        ===================================================== -->
-
-        <?php if (isset($databaseError)): ?>
-
-            <div class="database-error">
-
-                <strong>
-                    Database Error
-                </strong>
-
-                <br>
-
-                <?= e($databaseError) ?>
-
-            </div>
-
-        <?php endif; ?>
-
-
-
-        <!-- ====================================================
-             NOTIFICATION LIST
-        ===================================================== -->
-
-        <div class="notification-list">
-
-
-            <?php if (empty($notifications)): ?>
-
-
-                <!-- EMPTY STATE -->
-
-                <div class="empty-state">
-
-                    <div class="empty-icon">
-
-                        <i class="fa-regular fa-bell-slash"></i>
+                        <p>
+                            Manage store alerts, orders, reviews and system notifications.
+                        </p>
 
                     </div>
 
-                    <h3>
-                        No notifications found
-                    </h3>
 
-                    <p>
+                    <div class="header-actions">
 
-                        <?php if (
-                            $search !== ''
-                            || $statusFilter !== 'all'
-                            || $typeFilter !== 'all'
-                        ): ?>
+                    </div>
 
-                            Try changing your search or filter.
+                </header>
+
+
+
+                <!-- ========================================================
+                     FLASH MESSAGE
+                ========================================================= -->
+
+                <?php if ($flash): ?>
+
+                    <div
+                        class="flash <?= e($flash['type']) ?>"
+                        id="flashMessage"
+                    >
+
+                        <?php if ($flash['type'] === 'success'): ?>
+
+                            <i class="fa-solid fa-circle-check"></i>
 
                         <?php else: ?>
 
-                            There are no notifications available right now.
+                            <i class="fa-solid fa-circle-exclamation"></i>
 
                         <?php endif; ?>
 
-                    </p>
 
-                </div>
+                        <span>
+                            <?= e($flash['message']) ?>
+                        </span>
 
+                    </div>
 
-            <?php else: ?>
-
-
-                <?php foreach ($notifications as $notification): ?>
-
-
-                    <?php
-
-                    $notificationId =
-                        (int) $notification['id'];
-
-                    $isRead =
-                        (int) $notification['is_read'] === 1;
-
-                    $notificationType =
-                        $notification['type'] ?? 'general';
-
-                    $icon =
-                        getNotificationIcon(
-                            $notificationType
-                        );
-
-                    $typeClass =
-                        getNotificationTypeClass(
-                            $notificationType
-                        );
-
-                    ?>
+                <?php endif; ?>
 
 
-                    <!-- =================================================
-                         SINGLE NOTIFICATION
-                    ================================================== -->
 
-                    <article
-                        class="
-                            notification-item
-                            <?= !$isRead ? 'unread' : '' ?>
-                        "
+                <!-- ========================================================
+                     STATISTICS
+                ========================================================= -->
+
+                <section class="stats-grid">
+
+
+                    <!-- TOTAL -->
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon total">
+
+                            <i class="fa-solid fa-bell"></i>
+
+                        </div>
+
+                        <div class="stat-info">
+
+                            <span>
+                                Total Notifications
+                            </span>
+
+                            <strong>
+                                <?= number_format($totalNotifications) ?>
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- UNREAD -->
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon unread">
+
+                            <i class="fa-solid fa-envelope"></i>
+
+                        </div>
+
+                        <div class="stat-info">
+
+                            <span>
+                                Unread Notifications
+                            </span>
+
+                            <strong>
+                                <?= number_format($unreadNotifications) ?>
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- READ -->
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon read">
+
+                            <i class="fa-solid fa-envelope-open"></i>
+
+                        </div>
+
+                        <div class="stat-info">
+
+                            <span>
+                                Read Notifications
+                            </span>
+
+                            <strong>
+                                <?= number_format($readNotifications) ?>
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                </section>
+
+
+
+                <!-- ========================================================
+                     MAIN NOTIFICATION CARD
+                ========================================================= -->
+
+                <section class="notifications-card">
+
+
+                    <!-- ====================================================
+                         FILTER BAR
+                    ===================================================== -->
+
+                    <form
+                        method="GET"
+                        action="notifications.php"
+                        class="filter-bar"
                     >
 
 
-                        <!-- ICON -->
+                        <!-- SEARCH -->
 
-                        <div
-                            class="
-                                notification-icon
-                                <?= e($typeClass) ?>
-                            "
-                        >
+                        <div class="search-wrapper">
 
-                            <i
-                                class="
-                                    fa-solid
-                                    <?= e($icon) ?>
-                                "
-                            ></i>
+                            <i class="fa-solid fa-magnifying-glass"></i>
+
+                            <input
+                                type="search"
+                                name="search"
+                                placeholder="Search notifications..."
+                                value="<?= e($search) ?>"
+                            >
 
                         </div>
 
 
+                        <!-- STATUS -->
 
-                        <!-- CONTENT -->
+                        <select
+                            name="status"
+                            class="filter-select"
+                        >
 
-                        <div class="notification-content">
+                            <option
+                                value="all"
+                                <?= $statusFilter === 'all' ? 'selected' : '' ?>
+                            >
+                                All Notifications
+                            </option>
 
+                            <option
+                                value="unread"
+                                <?= $statusFilter === 'unread' ? 'selected' : '' ?>
+                            >
+                                Unread
+                            </option>
 
-                            <div class="notification-title-row">
+                            <option
+                                value="read"
+                                <?= $statusFilter === 'read' ? 'selected' : '' ?>
+                            >
+                                Read
+                            </option>
 
-                                <span class="notification-title">
-
-                                    <?= e(
-                                        $notification['title']
-                                        ?? 'Notification'
-                                    ) ?>
-
-                                </span>
-
-
-                                <?php if (!$isRead): ?>
-
-                                    <span
-                                        class="unread-dot"
-                                        title="Unread"
-                                    ></span>
-
-                                <?php endif; ?>
-
-                            </div>
-
-
-                            <div class="notification-message">
-
-                                <?= nl2br(
-                                    e(
-                                        $notification['message']
-                                        ?? ''
-                                    )
-                                ) ?>
-
-                            </div>
+                        </select>
 
 
-                            <div class="notification-meta">
+                        <!-- TYPE -->
+
+                        <select
+                            name="type"
+                            class="filter-select"
+                        >
+
+                            <option value="all">
+                                All Types
+                            </option>
 
 
-                                <span class="type-badge">
+                            <?php foreach ($notificationTypes as $notificationType): ?>
 
+                                <option
+                                    value="<?= e($notificationType) ?>"
+                                    <?= $typeFilter === $notificationType ? 'selected' : '' ?>
+                                >
                                     <?= e(
                                         getNotificationTypeLabel(
                                             $notificationType
                                         )
                                     ) ?>
+                                </option>
 
-                                </span>
+                            <?php endforeach; ?>
 
-
-                                <span>
-                                    <i class="fa-regular fa-clock"></i>
-
-                                    <?= formatNotificationDate(
-                                        $notification['created_at']
-                                        ?? null
-                                    ) ?>
-
-                                </span>
+                        </select>
 
 
-                                <?php if ($isRead): ?>
+                        <!-- APPLY -->
 
-                                    <span>
+                        <button
+                            type="submit"
+                            class="filter-btn"
+                        >
 
-                                        <i
-                                            class="
-                                                fa-solid
-                                                fa-check
-                                            "
-                                        ></i>
+                            <i class="fa-solid fa-filter"></i>
 
-                                        Read
+                            Filter
 
-                                    </span>
-
-                                <?php else: ?>
-
-                                    <span>
-
-                                        <i
-                                            class="
-                                                fa-solid
-                                                fa-envelope
-                                            "
-                                        ></i>
-
-                                        Unread
-
-                                    </span>
-
-                                <?php endif; ?>
+                        </button>
 
 
-                            </div>
+                    </form>
+
+
+
+                    <!-- ====================================================
+                         TOOLBAR
+                    ===================================================== -->
+
+                    <div class="toolbar">
+
+
+                        <div class="toolbar-left">
+
+                            Showing
+
+                            <strong>
+                                <?= number_format($totalNotifications) ?>
+                            </strong>
+
+                            notification(s)
 
                         </div>
 
 
-
-                        <!-- ACTIONS -->
-
-                        <div class="notification-actions">
+                        <div class="toolbar-actions">
 
 
-                            <?php if (!$isRead): ?>
-
-
-                                <!-- MARK READ -->
-
-                                <form
-                                    method="POST"
-                                    action="notifications.php"
-                                >
-
-                                    <input
-                                        type="hidden"
-                                        name="csrf_token"
-                                        value="<?= e($csrfToken) ?>"
-                                    >
-
-                                    <input
-                                        type="hidden"
-                                        name="action"
-                                        value="mark_read"
-                                    >
-
-                                    <input
-                                        type="hidden"
-                                        name="notification_id"
-                                        value="<?= $notificationId ?>"
-                                    >
-
-                                    <button
-                                        type="submit"
-                                        class="icon-btn mark"
-                                        title="Mark as read"
-                                    >
-
-                                        <i
-                                            class="
-                                                fa-solid
-                                                fa-check
-                                            "
-                                        ></i>
-
-                                    </button>
-
-                                </form>
-
-
-                            <?php else: ?>
-
-
-                                <!-- MARK UNREAD -->
-
-                                <form
-                                    method="POST"
-                                    action="notifications.php"
-                                >
-
-                                    <input
-                                        type="hidden"
-                                        name="csrf_token"
-                                        value="<?= e($csrfToken) ?>"
-                                    >
-
-                                    <input
-                                        type="hidden"
-                                        name="action"
-                                        value="mark_unread"
-                                    >
-
-                                    <input
-                                        type="hidden"
-                                        name="notification_id"
-                                        value="<?= $notificationId ?>"
-                                    >
-
-                                    <button
-                                        type="submit"
-                                        class="icon-btn mark"
-                                        title="Mark as unread"
-                                    >
-
-                                        <i
-                                            class="
-                                                fa-solid
-                                                fa-envelope
-                                            "
-                                        ></i>
-
-                                    </button>
-
-                                </form>
-
-
-                            <?php endif; ?>
-
-
-
-                            <!-- DELETE -->
+                            <!-- MARK ALL READ -->
 
                             <form
                                 method="POST"
                                 action="notifications.php"
                                 onsubmit="
                                     return confirm(
-                                        'Delete this notification?'
+                                        'Mark all notifications as read?'
                                     );
                                 "
                             >
@@ -3145,27 +2775,55 @@ $flash = getFlash();
                                 <input
                                     type="hidden"
                                     name="action"
-                                    value="delete"
-                                >
-
-                                <input
-                                    type="hidden"
-                                    name="notification_id"
-                                    value="<?= $notificationId ?>"
+                                    value="mark_all_read"
                                 >
 
                                 <button
                                     type="submit"
-                                    class="icon-btn delete"
-                                    title="Delete notification"
+                                    class="small-btn read-all"
                                 >
 
-                                    <i
-                                        class="
-                                            fa-solid
-                                            fa-trash
-                                        "
-                                    ></i>
+                                    <i class="fa-solid fa-check-double"></i>
+
+                                    Mark All Read
+
+                                </button>
+
+                            </form>
+
+
+                            <!-- DELETE READ -->
+
+                            <form
+                                method="POST"
+                                action="notifications.php"
+                                onsubmit="
+                                    return confirm(
+                                        'Delete all read notifications? This action cannot be undone.'
+                                    );
+                                "
+                            >
+
+                                <input
+                                    type="hidden"
+                                    name="csrf_token"
+                                    value="<?= e($csrfToken) ?>"
+                                >
+
+                                <input
+                                    type="hidden"
+                                    name="action"
+                                    value="delete_read"
+                                >
+
+                                <button
+                                    type="submit"
+                                    class="small-btn delete-read"
+                                >
+
+                                    <i class="fa-solid fa-trash"></i>
+
+                                    Delete Read
 
                                 </button>
 
@@ -3174,20 +2832,418 @@ $flash = getFlash();
 
                         </div>
 
-
-                    </article>
-
-
-                <?php endforeach; ?>
+                    </div>
 
 
-            <?php endif; ?>
+
+                    <!-- ====================================================
+                         DATABASE ERROR
+                    ===================================================== -->
+
+                    <?php if (isset($databaseError)): ?>
+
+                        <div class="database-error">
+
+                            <strong>
+                                Database Error
+                            </strong>
+
+                            <br>
+
+                            <?= e($databaseError) ?>
+
+                        </div>
+
+                    <?php endif; ?>
+
+
+
+                    <!-- ====================================================
+                         NOTIFICATION LIST
+                    ===================================================== -->
+
+                    <div class="notification-list">
+
+
+                        <?php if (empty($notifications)): ?>
+
+
+                            <!-- EMPTY STATE -->
+
+                            <div class="empty-state">
+
+                                <div class="empty-icon">
+
+                                    <i class="fa-regular fa-bell-slash"></i>
+
+                                </div>
+
+                                <h3>
+                                    No notifications found
+                                </h3>
+
+                                <p>
+
+                                    <?php if (
+                                        $search !== ''
+                                        || $statusFilter !== 'all'
+                                        || $typeFilter !== 'all'
+                                    ): ?>
+
+                                        Try changing your search or filter.
+
+                                    <?php else: ?>
+
+                                        There are no notifications available right now.
+
+                                    <?php endif; ?>
+
+                                </p>
+
+                            </div>
+
+
+                        <?php else: ?>
+
+
+                            <?php foreach ($notifications as $notification): ?>
+
+
+                                <?php
+
+                                $notificationId =
+                                    (int) $notification['id'];
+
+                                $isRead =
+                                    (int) $notification['is_read'] === 1;
+
+                                $notificationType =
+                                    $notification['type'] ?? 'general';
+
+                                $icon =
+                                    getNotificationIcon(
+                                        $notificationType
+                                    );
+
+                                $typeClass =
+                                    getNotificationTypeClass(
+                                        $notificationType
+                                    );
+
+                                ?>
+
+
+                                <!-- =================================================
+                                     SINGLE NOTIFICATION
+                                ================================================== -->
+
+                                <article
+                                    class="
+                                        notification-item
+                                        <?= !$isRead ? 'unread' : '' ?>
+                                    "
+                                >
+
+
+                                    <!-- ICON -->
+
+                                    <div
+                                        class="
+                                            notification-icon
+                                            <?= e($typeClass) ?>
+                                        "
+                                    >
+
+                                        <i
+                                            class="
+                                                fa-solid
+                                                <?= e($icon) ?>
+                                            "
+                                        ></i>
+
+                                    </div>
+
+
+
+                                    <!-- CONTENT -->
+
+                                    <div class="notification-content">
+
+
+                                        <div class="notification-title-row">
+
+                                            <span class="notification-title">
+
+                                                <?= e(
+                                                    $notification['title']
+                                                    ?? 'Notification'
+                                                ) ?>
+
+                                            </span>
+
+
+                                            <?php if (!$isRead): ?>
+
+                                                <span
+                                                    class="unread-dot"
+                                                    title="Unread"
+                                                ></span>
+
+                                            <?php endif; ?>
+
+                                        </div>
+
+
+                                        <div class="notification-message">
+
+                                            <?= nl2br(
+                                                e(
+                                                    $notification['message']
+                                                    ?? ''
+                                                )
+                                            ) ?>
+
+                                        </div>
+
+
+                                        <div class="notification-meta">
+
+
+                                            <span class="type-badge">
+
+                                                <?= e(
+                                                    getNotificationTypeLabel(
+                                                        $notificationType
+                                                    )
+                                                ) ?>
+
+                                            </span>
+
+
+                                            <span>
+                                                <i class="fa-regular fa-clock"></i>
+
+                                                <?= formatNotificationDate(
+                                                    $notification['created_at']
+                                                    ?? null
+                                                ) ?>
+
+                                            </span>
+
+
+                                            <?php if ($isRead): ?>
+
+                                                <span>
+
+                                                    <i
+                                                        class="
+                                                            fa-solid
+                                                            fa-check
+                                                        "
+                                                    ></i>
+
+                                                    Read
+
+                                                </span>
+
+                                            <?php else: ?>
+
+                                                <span>
+
+                                                    <i
+                                                        class="
+                                                            fa-solid
+                                                            fa-envelope
+                                                        "
+                                                    ></i>
+
+                                                    Unread
+
+                                                </span>
+
+                                            <?php endif; ?>
+
+
+                                        </div>
+
+                                    </div>
+
+
+
+                                    <!-- ACTIONS -->
+
+                                    <div class="notification-actions">
+
+
+                                        <?php if (!$isRead): ?>
+
+
+                                            <!-- MARK READ -->
+
+                                            <form
+                                                method="POST"
+                                                action="notifications.php"
+                                            >
+
+                                                <input
+                                                    type="hidden"
+                                                    name="csrf_token"
+                                                    value="<?= e($csrfToken) ?>"
+                                                >
+
+                                                <input
+                                                    type="hidden"
+                                                    name="action"
+                                                    value="mark_read"
+                                                >
+
+                                                <input
+                                                    type="hidden"
+                                                    name="notification_id"
+                                                    value="<?= $notificationId ?>"
+                                                >
+
+                                                <button
+                                                    type="submit"
+                                                    class="icon-btn mark"
+                                                    title="Mark as read"
+                                                >
+
+                                                    <i
+                                                        class="
+                                                            fa-solid
+                                                            fa-check
+                                                        "
+                                                    ></i>
+
+                                                </button>
+
+                                            </form>
+
+
+                                        <?php else: ?>
+
+
+                                            <!-- MARK UNREAD -->
+
+                                            <form
+                                                method="POST"
+                                                action="notifications.php"
+                                            >
+
+                                                <input
+                                                    type="hidden"
+                                                    name="csrf_token"
+                                                    value="<?= e($csrfToken) ?>"
+                                                >
+
+                                                <input
+                                                    type="hidden"
+                                                    name="action"
+                                                    value="mark_unread"
+                                                >
+
+                                                <input
+                                                    type="hidden"
+                                                    name="notification_id"
+                                                    value="<?= $notificationId ?>"
+                                                >
+
+                                                <button
+                                                    type="submit"
+                                                    class="icon-btn mark"
+                                                    title="Mark as unread"
+                                                >
+
+                                                    <i
+                                                        class="
+                                                            fa-solid
+                                                            fa-envelope
+                                                        "
+                                                    ></i>
+
+                                                </button>
+
+                                            </form>
+
+
+                                        <?php endif; ?>
+
+
+
+                                        <!-- DELETE -->
+
+                                        <form
+                                            method="POST"
+                                            action="notifications.php"
+                                            onsubmit="
+                                                return confirm(
+                                                    'Delete this notification?'
+                                                );
+                                            "
+                                        >
+
+                                            <input
+                                                type="hidden"
+                                                name="csrf_token"
+                                                value="<?= e($csrfToken) ?>"
+                                            >
+
+                                            <input
+                                                type="hidden"
+                                                name="action"
+                                                value="delete"
+                                            >
+
+                                            <input
+                                                type="hidden"
+                                                name="notification_id"
+                                                value="<?= $notificationId ?>"
+                                            >
+
+                                            <button
+                                                type="submit"
+                                                class="icon-btn delete"
+                                                title="Delete notification"
+                                            >
+
+                                                <i
+                                                    class="
+                                                        fa-solid
+                                                        fa-trash
+                                                    "
+                                                ></i>
+
+                                            </button>
+
+                                        </form>
+
+
+                                    </div>
+
+
+                                </article>
+
+
+                            <?php endforeach; ?>
+
+
+                        <?php endif; ?>
+
+
+                    </div>
+
+
+                </section>
+
+
+            </div>
 
 
         </div>
 
 
-    </section>
+    </main>
 
 
 </div>
