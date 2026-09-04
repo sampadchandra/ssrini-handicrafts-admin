@@ -303,9 +303,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             <span> 
                 Logout 
             </span> 
-            <span class="nav-icon">
-                <=
-            </span>
+           
         </a> 
  
     </div> 
