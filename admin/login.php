@@ -19,7 +19,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
 
     if($email === '' || $password === ''){
-        $error = 'Please enter your and password.';
+        $error = 'Please enter your email and password.';
 
     } else {
 
@@ -349,8 +349,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
                 none;
         }
 
-        /* Decorative soft curves */
-
         .login-showcase {
             isolation:
                 isolate;
@@ -366,10 +364,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-bottom:
                 38px;
         }
-
-        /*
-         * LOGO AREA
-         */
 
         .brand-mark {
             width:
@@ -515,10 +509,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
                 uppercase;
         }
 
-        /* =========================================
-           SHOWCASE CONTENT
-        ========================================= */
-
         .showcase-content {
             position:
                 relative;
@@ -565,10 +555,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             max-width:
                 530px;
         }
-
-        /* =========================================
-           ACHIEVEMENTS
-        ========================================= */
 
         .achievement-list {
             display:
@@ -733,10 +719,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
                 700;
         }
 
-        /* =========================================
-           RIGHT LOGIN AREA
-        ========================================= */
-
         .login-area {
             min-height:
                 calc(100vh - 16px);
@@ -842,10 +824,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
                 none;
         }
 
-        /* =========================================
-           LOGIN CARD
-        ========================================= */
-
         .login-card {
             width:
                 100%;
@@ -949,10 +927,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
                 none;
         }
 
-        /* =========================================
-           LOGIN HEADING
-        ========================================= */
-
         .login-heading {
             position:
                 relative;
@@ -996,10 +970,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-weight:
                 500;
         }
-
-        /* =========================================
-           ERROR
-        ========================================= */
 
         .error-message {
             position:
@@ -1049,10 +1019,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             color:
                 var(--pink);
         }
-
-        /* =========================================
-           FORM
-        ========================================= */
 
         .login-form {
             position:
@@ -1187,10 +1153,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
                 25px;
         }
 
-        /* =========================================
-           LOGIN BUTTON
-        ========================================= */
-
         .login-button {
             width:
                 100%;
@@ -1264,10 +1226,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-right:
                 7px;
         }
-
-        /* =========================================
-           TRUST SECTION
-        ========================================= */
 
         .trust-section {
             margin-top:
@@ -1383,31 +1341,19 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
                 23px;
         }
 
-        /* =========================================
-           TABLET
-        ========================================= */
-
         @media (max-width: 1100px) {
-
             .login-page {
                 grid-template-columns:
                     minmax(0, 1fr)
                     minmax(390px, 450px);
             }
-
             .login-showcase {
                 padding:
                     45px;
             }
-
         }
 
-        /* =========================================
-           MOBILE / TABLET
-        ========================================= */
-
         @media (max-width: 950px) {
-
             .login-page {
                 grid-template-columns:
                     1fr;
@@ -1469,15 +1415,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
                 border-radius:
                     0 0 22px 22px;
             }
-
         }
 
-        /* =========================================
-           MOBILE
-        ========================================= */
-
         @media (max-width: 600px) {
-
             body {
                 background:
                     linear-gradient(
@@ -1612,15 +1552,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
                 gap:
                     4px;
             }
-
         }
 
-        /* =========================================
-           SMALL MOBILE
-        ========================================= */
-
         @media (max-width: 400px) {
-
             .login-showcase {
                 padding:
                     36px 16px 30px;
@@ -1696,7 +1630,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
                 font-size:
                     8px;
             }
-
         }
 
     </style>
@@ -1845,7 +1778,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 type="password"
                                 id="password"
                                 name="password"
-                                requiredautocomplete="complete-password"
+                                required
+                                autocomplete="current-password"
                             >
 
                         </div>

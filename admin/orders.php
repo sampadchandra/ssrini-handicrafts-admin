@@ -1440,7 +1440,7 @@ $queryString = http_build_query($currentQuery);
 
                 <!-- REVENUE MINI CARD -->
                 <section style="margin-bottom:20px;">
-                    <div class="order-stat-card order-stat-revenue" style="display:flex; align-items:center; justify-space-between; gap:20px;">
+                    <div class="order-stat-card order-stat-revenue" style="display:flex; align-items:center; justify-content: space-betweeneen; gap:20px;">
                         <div style="display:flex; align-items:center; gap:12px;">
                             <div class="order-stat-icon">₹</div>
                             <div>

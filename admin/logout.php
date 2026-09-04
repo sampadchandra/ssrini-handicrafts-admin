@@ -1,10 +1,20 @@
-<?php 
+<?php
 
-session_start();
+/**
+ * ============================================================
+ * SSRINI HANDICRAFTS - LOGOUT SCRIPT
+ * ============================================================
+ */
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Clear all session variables
 $_SESSION = [];
 
-if(ini_get('session.use_cookies')) {
+// Delete session cookie if used
+if (ini_get('session.use_cookies')) {
     $params = session_get_cookie_params();
 
     setcookie(
@@ -15,10 +25,12 @@ if(ini_get('session.use_cookies')) {
         $params['domain'],
         $params['secure'],
         $params['httponly']
-
     );
 }
+
+// Destroy the session storage
 session_destroy();
 
+// Redirect to login page
 header('Location: login.php');
 exit;
