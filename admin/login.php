@@ -2,1286 +2,1980 @@
 
 require_once __DIR__ . '/../config/database.php';
 
-if(session_status() === PHP_SESSION_NONE) {
+if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-if(isset($_SESSION['admin_id'])) {
+if (isset($_SESSION['admin_id'])) {
     header('Location: index.php');
     exit;
-
 }
 
 $error = '';
 
-if($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-$email = trim($_POST['email'] ?? '');
-$password = $_POST['password'] ?? '';
+    $email = trim($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
 
-if($email === '' || $password === ''){
-    $error = 'Please enter your and password.';
+    if ($email === '' || $password === '') {
 
-} else{
+        $error = 'Please enter your email and password.';
 
-$stmt = $pdo->prepare(
-    'SELECT id, name, email, password, role, status
-    FROM admins
-    WHERE email = :email
-    LIMIT 1'
-);
+    } else {
 
-$stmt->execute([
-    'email' => $email
-    ]);
-    
-    $admin = $stmt->fetch();
+        $stmt = $pdo->prepare(
+            'SELECT id, name, email, password, role, status
+             FROM admins
+             WHERE email = :email
+             LIMIT 1'
+        );
 
-    if(
-    $admin && 
-    $admin['status'] === 'active' &&
-    password_verify($password, $admin['password'])
-    ) {
-    session_regenerate_id(true);
+        $stmt->execute([
+            'email' => $email
+        ]);
 
-    $_SESSION ['admin_id'] = $admin['id'];
-    $_SESSION['admin_name'] = $admin['name'];
-    $_SESSION['admin_email'] = $admin['email'];
-    $_SESSION['admin_role'] = $admin['role'];
+        $admin = $stmt->fetch();
 
-    header('Location: index.php');
-    exit;
-    } else{
-        $error = 'Invalid email or password.';
+        if (
+            $admin &&
+            $admin['status'] === 'active' &&
+            password_verify($password, $admin['password'])
+        ) {
 
+            session_regenerate_id(true);
+
+            $_SESSION['admin_id'] = $admin['id'];
+            $_SESSION['admin_name'] = $admin['name'];
+            $_SESSION['admin_email'] = $admin['email'];
+            $_SESSION['admin_role'] = $admin['role'];
+
+            header('Location: index.php');
+            exit;
+
+        } else {
+
+            $error = 'Invalid email or password.';
+        }
     }
-}
-
 }
 
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login | SSRINI HANDICRAFTS</title>
 
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Admin Login | SsRini Handicrafts</title>
+
+
+    <!-- Google Fonts -->
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap"
         rel="stylesheet"
     >
 
+
+    <!-- Font Awesome -->
     <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     >
 
-    <style>
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --purple-dark: #16051f;
-            --purple: #421052;
-            --purple-main: #6d176f;
-            --magenta: #a51c78;
-            --gold: #d8a82e;
-            --gold-light: #f2d477;
-            --cream: #fffaf0;
-            --white: #ffffff;
-            --text: #302335;
-            --muted: #8a7b8e;
-            --border: #eadfe9;
-        }
-
-        html,
-        body {
-            width: 100%;
-            min-height: 100%;
-        }
 
-        body {
-            font-family:
-                Inter,
-                Arial,
-                sans-serif;
+<style>
 
-            min-height: 100vh;
+/* =========================================================
+   SsRini Handicrafts
+   ADMIN LOGIN PAGE
+   LIGHT BLUE + LIGHT PINK PREMIUM DESIGN
+   ========================================================= */
 
-            background:
-                radial-gradient(
-                    circle at 15% 20%,
-                    rgba(194, 95, 180, 0.20),
-                    transparent 25%
-                ),
-                radial-gradient(
-                    circle at 85% 80%,
-                    rgba(216, 168, 46, 0.13),
-                    transparent 25%
-                ),
-                linear-gradient(
-                    135deg,
-                    #120418 0%,
-                    #2b082f 42%,
-                    #4b0d4d 72%,
-                    #16051f 100%
-                );
 
-            color:
-                var(--text);
+/* =========================================================
+   RESET
+   ========================================================= */
 
-            overflow-x:
-                hidden;
-        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        body::before {
-            content: "";
 
-            position: fixed;
+/* =========================================================
+   VARIABLES
+   ========================================================= */
 
-            inset: 0;
+:root {
 
-            pointer-events: none;
+    --blue-light: #eaf4ff;
+    --blue-soft: #d8eaff;
+    --blue-main: #6f9fe8;
+    --blue-dark: #315b9e;
 
-            background:
-                radial-gradient(
-                    circle at 50% 50%,
-                    transparent 0%,
-                    rgba(0, 0, 0, 0.16) 100%
-                );
+    --pink-light: #fff1f7;
+    --pink-soft: #ffddea;
+    --pink-main: #e789ae;
+    --pink-dark: #d76591;
 
-            z-index: 0;
-        }
+    --white: #ffffff;
 
-        body::after {
-            content: "";
+    --text: #303746;
+    --muted: #858c9c;
 
-            position: fixed;
+    --border: #dfe6f0;
 
-            width: 600px;
-            height: 600px;
+    --shadow-blue: rgba(76, 116, 170, 0.13);
+    --shadow-pink: rgba(215, 101, 145, 0.12);
+}
 
-            border-radius: 50%;
 
-            border:
-                1px solid rgba(242, 212, 119, 0.12);
+/* =========================================================
+   HTML + BODY
+   ========================================================= */
 
-            top: -300px;
-            right: -220px;
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+}
 
-            box-shadow:
-                0 0 0 45px rgba(242, 212, 119, 0.025),
-                0 0 0 90px rgba(242, 212, 119, 0.018);
+body {
 
-            pointer-events: none;
+    min-height: 100vh;
 
-            z-index: 0;
-        }
+    font-family:
+        "Inter",
+        Arial,
+        sans-serif;
 
-        .login-page {
-            min-height: 100vh;
+    color: var(--text);
 
-            width: 100%;
+    background:
+        linear-gradient(
+            135deg,
+            #dcecff 0%,
+            #edf6ff 38%,
+            #fffafd 68%,
+            #ffeaf3 100%
+        );
 
-            display: grid;
+    overflow-x: hidden;
 
-            grid-template-columns:
-                minmax(0, 1fr)
-                minmax(420px, 520px);
+    position: relative;
+}
 
-            position: relative;
 
-            z-index: 1;
-        }
+/* =========================================================
+   BACKGROUND GLOW
+   ========================================================= */
 
-        .login-showcase {
-            position: relative;
+body::before {
 
-            min-height: 100vh;
+    content: "";
 
-            padding: 55px;
+    position: fixed;
 
-            display: flex;
+    inset: 0;
 
-            flex-direction: column;
+    pointer-events: none;
 
-            justify-content: center;
+    background:
 
-            overflow: hidden;
-        }
+        radial-gradient(
+            circle at 7% 25%,
+            rgba(111, 159, 232, 0.14),
+            transparent 25%
+        ),
 
-        .login-showcase::before {
-            content: "";
+        radial-gradient(
+            circle at 92% 72%,
+            rgba(231, 137, 174, 0.14),
+            transparent 26%
+        );
 
-            position: absolute;
+    z-index: 0;
+}
 
-            width: 520px;
-            height: 520px;
 
-            border-radius: 50%;
+/* =========================================================
+   MAIN PAGE
+   ========================================================= */
 
-            border:
-                1px solid rgba(242, 212, 119, 0.16);
+.login-page {
 
-            left: -260px;
-            top: 50%;
+    width: 100%;
 
-            transform:
-                translateY(-50%);
+    min-height: 100vh;
 
-            box-shadow:
-                0 0 0 35px rgba(242, 212, 119, 0.025),
-                0 0 0 70px rgba(242, 212, 119, 0.018);
-        }
+    display: grid;
 
-        .login-showcase::after {
-            content: "";
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(430px, 520px);
 
-            position: absolute;
+    position: relative;
 
-            width: 300px;
-            height: 300px;
+    z-index: 1;
+}
 
-            border-radius: 50%;
 
-            border:
-                1px solid rgba(242, 212, 119, 0.10);
+/* =========================================================
+   LEFT SHOWCASE
+   ========================================================= */
 
-            right: -150px;
-            bottom: -150px;
-        }
+.login-showcase {
 
-        .brand {
-            position: relative;
+    min-height: 100vh;
 
-            z-index: 2;
+    padding: 55px;
 
-            margin-bottom: 38px;
-        }
+    display: flex;
 
-        .brand-mark {
-            width: 72px;
-            height: 72px;
+    flex-direction: column;
 
-            border-radius: 50%;
+    justify-content: center;
 
-            display: flex;
+    align-items: center;
 
-            align-items: center;
+    text-align: center;
 
-            justify-content: center;
+    position: relative;
 
-            margin-bottom: 18px;
+    overflow: hidden;
 
-            background:
-                linear-gradient(
-                    145deg,
-                    #f5dc80,
-                    #b27b18
-                );
+    background:
+        linear-gradient(
+            135deg,
+            #cfe5ff 0%,
+            #dcecff 40%,
+            #eef6ff 68%,
+            #fdf0f8 100%
+        );
+}
 
-            color:
-                #3b092f;
 
-            font-family:
-                "Playfair Display",
-                serif;
+/* =========================================================
+   LARGE DECORATIVE CIRCLE
+   ========================================================= */
 
-            font-size:
-                36px;
+.login-showcase::before {
 
-            font-weight:
-                700;
+    content: "";
 
-            border:
-                3px solid rgba(255, 255, 255, 0.55);
+    position: absolute;
 
-            box-shadow:
-                0 12px 35px rgba(0, 0, 0, 0.35),
-                0 0 0 8px rgba(216, 168, 46, 0.08);
-        }
+    width: 640px;
+    height: 640px;
 
-        .brand h1 {
-            color:
-                #ffffff;
+    border-radius: 50%;
 
-            font-family:
-                "Playfair Display",
-                Georgia,
-                serif;
+    border:
+        1px solid rgba(255, 255, 255, 0.78);
 
-            font-size:
-                clamp(34px, 4vw, 58px);
+    left: -325px;
+    top: 50%;
 
-            line-height:
-                1.05;
+    transform: translateY(-50%);
 
-            letter-spacing:
-                1px;
+    box-shadow:
 
-            margin-bottom:
-                13px;
-        }
+        0 0 0 35px
+        rgba(255, 255, 255, 0.20),
 
-        .brand h1::first-letter {
-            color:
-                var(--gold-light);
-        }
+        0 0 0 75px
+        rgba(255, 255, 255, 0.11);
 
-        .brand p {
-            color:
-                rgba(255, 255, 255, 0.68);
+    pointer-events: none;
+}
 
-            font-size:
-                14px;
 
-            letter-spacing:
-                3px;
+/* =========================================================
+   BOTTOM PINK GLOW
+   ========================================================= */
 
-            text-transform:
-                uppercase;
-        }
+.login-showcase::after {
 
-        .showcase-content {
-            position: relative;
+    content: "";
 
-            z-index: 2;
+    position: absolute;
 
-            max-width:
-                650px;
-        }
+    width: 500px;
+    height: 500px;
 
-        .showcase-content h2 {
-            color:
-                var(--gold-light);
+    border-radius: 50%;
 
-            font-family:
-                "Playfair Display",
-                Georgia,
-                serif;
+    right: -280px;
+    bottom: -300px;
 
-            font-size:
-                clamp(30px, 4vw, 52px);
+    background:
+        radial-gradient(
+            circle,
+            rgba(255, 190, 215, 0.38),
+            rgba(255, 220, 235, 0.10) 60%,
+            transparent 72%
+        );
 
-            line-height:
-                1.15;
+    border:
+        1px solid rgba(255, 255, 255, 0.55);
 
-            margin-bottom:
-                18px;
-        }
+    pointer-events: none;
+}
 
-        .showcase-content > p {
-            color:
-                rgba(255, 255, 255, 0.70);
 
-            font-size:
-                15px;
+/* =========================================================
+   BRAND
+   ========================================================= */
 
-            line-height:
-                1.8;
+.brand {
 
-            max-width:
-                530px;
-        }
+    position: relative;
 
-        .achievement-list {
-            display:
-                flex;
+    z-index: 3;
 
-            gap:
-                13px;
+    display: flex;
 
-            margin-top:
-                34px;
+    flex-direction: column;
 
-            flex-wrap:
-                wrap;
-        }
+    align-items: center;
 
-        .achievement {
-            min-width:
-                145px;
+    margin-bottom: 25px;
+}
 
-            padding:
-                15px 17px;
 
-            border:
-                1px solid rgba(242, 212, 119, 0.20);
+/* =========================================================
+   LOGO FRAME
+   ========================================================= */
 
-            border-radius:
-                14px;
+.brand-mark {
 
-            background:
-                rgba(255, 255, 255, 0.045);
+    width: 92px;
+    height: 92px;
 
-            backdrop-filter:
-                blur(10px);
+    padding: 6px;
 
-            color:
-                rgba(255, 255, 255, 0.86);
-        }
+    margin-bottom: 17px;
 
-        .achievement i {
-            color:
-                var(--gold-light);
+    border-radius: 50%;
 
-            font-size:
-                17px;
+    display: flex;
 
-            margin-bottom:
-                9px;
-        }
+    align-items: center;
 
-        .achievement strong {
-            display:
-                block;
+    justify-content: center;
 
-            font-size:
-                12px;
+    position: relative;
 
-            line-height:
-                1.45;
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff,
+            #f8fbff
+        );
 
-            font-weight:
-                600;
-        }
+    border:
+        2px solid rgba(111, 159, 232, 0.55);
 
-        .login-area {
-            min-height: 100vh;
+    box-shadow:
 
-            display: flex;
+        0 14px 30px
+        rgba(65, 99, 150, 0.16),
 
-            align-items: center;
+        0 0 0 7px
+        rgba(255, 255, 255, 0.40);
+}
 
-            justify-content: center;
 
-            padding: 45px 35px;
+/* Inner frame */
 
-            position: relative;
+.brand-mark::before {
 
-            background:
-                linear-gradient(
-                    135deg,
-                    rgba(255, 250, 240, 0.98),
-                    rgba(255, 255, 255, 0.97)
-                );
+    content: "";
 
-            border-left:
-                1px solid rgba(255, 255, 255, 0.08);
-        }
+    position: absolute;
 
-        .login-card {
-            width: 100%;
+    inset: 5px;
 
-            max-width: 420px;
+    border-radius: 50%;
 
-            padding:
-                42px 40px 34px;
+    border:
+        2px solid rgba(231, 137, 174, 0.55);
 
-            background:
-                rgba(255, 255, 255, 0.94);
+    pointer-events: none;
 
-            border:
-                1px solid var(--border);
+    z-index: 2;
+}
 
-            border-radius:
-                24px;
 
-            box-shadow:
-                0 30px 70px rgba(40, 11, 42, 0.14);
+/* Decorative dots */
 
-            position:
-                relative;
+.brand-mark::after {
 
-            overflow:
-                hidden;
-        }
+    content: "";
 
-        .login-card::before {
-            content: "";
+    position: absolute;
 
-            position: absolute;
+    width: 10px;
+    height: 10px;
 
-            left: 0;
-            right: 0;
-            top: 0;
+    border-radius: 50%;
 
-            height: 5px;
+    top: 0;
+    right: 13px;
 
-            background:
-                linear-gradient(
-                    90deg,
-                    var(--purple-main),
-                    var(--magenta),
-                    var(--gold)
-                );
-        }
+    background: var(--pink-main);
 
-        .login-card::after {
-            content: "";
+    box-shadow:
+        -63px 60px 0 -2px var(--blue-main);
 
-            position: absolute;
+    z-index: 4;
+}
 
-            width: 180px;
-            height: 180px;
 
-            border-radius: 50%;
+/* Logo */
 
-            background:
-                radial-gradient(
-                    circle,
-                    rgba(216, 168, 46, 0.08),
-                    transparent 70%
-                );
+.brand-mark img {
 
-            top: -90px;
-            right: -90px;
+    width: 100%;
+    height: 100%;
 
-            pointer-events: none;
-        }
+    display: block;
 
-        .login-heading {
-            position:
-                relative;
+    object-fit: contain;
 
-            z-index:
-                2;
+    object-position: center;
 
-            margin-bottom:
-                30px;
+    border-radius: 50%;
 
-            text-align:
-                center;
-        }
+    position: relative;
 
-        .login-heading h2 {
-            font-family:
-                "Playfair Display",
-                Georgia,
-                serif;
+    z-index: 3;
+}
 
-            font-size:
-                31px;
 
-            color:
-                #401043;
+/* =========================================================
+   BRAND TITLE
+   ========================================================= */
 
-            margin-bottom:
-                8px;
-        }
+.brand h1 {
 
-        .login-heading p {
-            color:
-                var(--muted);
+    font-family:
+        "Playfair Display",
+        Georgia,
+        serif;
 
-            font-size:
-                13px;
-        }
+    font-size:
+        clamp(36px, 4vw, 58px);
 
-        .error-message {
-            position:
-                relative;
+    line-height: 1.05;
 
-            z-index:
-                2;
+    letter-spacing: 0.3px;
 
-            display:
-                flex;
+    color: var(--blue-dark);
 
-            align-items:
-                center;
+    margin-bottom: 10px;
 
-            gap:
-                10px;
+    text-shadow:
+        0 4px 15px
+        rgba(49, 91, 158, 0.10);
+}
 
-            padding:
-                12px 14px;
 
-            margin-bottom:
-                20px;
+/* Pink first letter */
 
-            border:
-                1px solid #f2c8d0;
+.brand h1::first-letter {
 
-            background:
-                #fff1f4;
+    color: var(--pink-dark);
+}
 
-            color:
-                #b52f49;
 
-            border-radius:
-                10px;
+/* Subtitle */
 
-            font-size:
-                12px;
+.brand p {
 
-            line-height:
-                1.5;
-        }
+    color: #52627b;
 
-        .login-form {
-            position:
-                relative;
+    font-size: 12px;
 
-            z-index:
-                2;
-        }
+    font-weight: 700;
 
-        .form-group {
-            margin-bottom:
-                20px;
-        }
+    letter-spacing: 3px;
 
-        .form-group label {
-            display:
-                block;
+    text-transform: uppercase;
+}
 
-            color:
-                #4b3b4e;
 
-            font-size:
-                12px;
+.brand p::before,
+.brand p::after {
 
-            font-weight:
-                700;
+    content: "✦";
 
-            margin-bottom:
-                8px;
-        }
+    color: var(--pink-main);
 
-        .input-wrapper {
-            position:
-                relative;
-        }
+    margin: 0 9px;
 
-        .input-wrapper > i {
-            position:
-                absolute;
+    font-size: 10px;
+}
 
-            left:
-                15px;
 
-            top:
-                50%;
+/* =========================================================
+   SHOWCASE CONTENT
+   ========================================================= */
 
-            transform:
-                translateY(-50%);
+.showcase-content {
 
-            color:
-                #a78ea9;
+    width: 100%;
 
-            font-size:
-                13px;
+    max-width: 690px;
 
-            pointer-events:
-                none;
-        }
+    position: relative;
 
-        .input-wrapper input {
-            width:
-                100%;
+    z-index: 3;
+}
 
-            height:
-                48px;
 
-            padding:
-                0 15px 0 43px;
+.showcase-content h2 {
 
-            border:
-                1px solid var(--border);
+    font-family:
+        "Playfair Display",
+        Georgia,
+        serif;
 
-            border-radius:
-                11px;
+    font-size:
+        clamp(31px, 4vw, 48px);
 
-            outline:
-                none;
+    line-height: 1.15;
 
-            background:
-                #fffdfd;
+    color: var(--pink-dark);
 
-            color:
-                var(--text);
+    margin-bottom: 12px;
 
-            font-size:
-                13px;
+    text-shadow:
+        0 4px 16px
+        rgba(215, 101, 145, 0.12);
+}
 
-            transition:
-                all 0.22s ease;
-        }
 
-        .input-wrapper input:hover {
-            border-color:
-                #d9c7db;
-        }
+.showcase-content > p {
 
-        .input-wrapper input:focus {
-            border-color:
-                var(--purple-main);
+    max-width: 550px;
 
-            background:
-                #ffffff;
+    margin: 0 auto;
 
-            box-shadow:
-                0 0 0 4px rgba(109, 23, 111, 0.08);
-        }
+    color: #4d5870;
 
-        .form-group:nth-of-type(2) {
-            margin-bottom:
-                25px;
-        }
+    font-size: 14px;
 
-        .login-button {
-            width:
-                100%;
+    line-height: 1.7;
+}
 
-            height:
-                49px;
 
-            border:
-                none;
+/* =========================================================
+   AWARD LIST
+   ========================================================= */
 
-            border-radius:
-                11px;
+.achievement-list {
 
-            background:
-                linear-gradient(
-                    135deg,
-                    #5b1465,
-                    #a51c78
-                );
+    width: 100%;
 
-            color:
-                #ffffff;
+    display: grid;
 
-            font-size:
-                13px;
+    grid-template-columns:
+        repeat(3, 1fr);
 
-            font-weight:
-                700;
+    gap: 17px;
 
-            letter-spacing:
-                0.3px;
+    margin-top: 29px;
+}
 
-            cursor:
-                pointer;
 
-            box-shadow:
-                0 9px 22px rgba(109, 23, 111, 0.24);
+/* =========================================================
+   AWARD CARD
+   ========================================================= */
 
-            transition:
-                all 0.22s ease;
-        }
+.achievement {
 
-        .login-button:hover {
-            transform:
-                translateY(-2px);
+    min-width: 0;
 
-            box-shadow:
-                0 13px 27px rgba(109, 23, 111, 0.32);
+    min-height: 170px;
 
-            background:
-                linear-gradient(
-                    135deg,
-                    #6d176f,
-                    #b51d83
-                );
-        }
+    padding: 12px;
 
-        .login-button:active {
-            transform:
-                translateY(0);
-        }
+    display: flex;
 
-        .login-button i {
-            margin-right:
-                7px;
-        }
+    flex-direction: column;
 
-        .trust-section {
-            margin-top:
-                28px;
+    align-items: center;
 
-            padding-top:
-                23px;
+    justify-content: space-between;
 
-            border-top:
-                1px solid #eee6ee;
+    text-align: center;
 
-            display:
-                grid;
+    position: relative;
 
-            grid-template-columns:
-                repeat(3, 1fr);
+    overflow: hidden;
 
-            gap:
-                8px;
+    background:
+        rgba(255, 255, 255, 0.82);
 
-            text-align:
-                center;
-        }
+    border:
+        1px solid rgba(255, 255, 255, 0.90);
 
-        .trust-item {
-            color:
-                #806f82;
+    border-radius: 18px;
 
-            font-size:
-                9px;
+    box-shadow:
 
-            line-height:
-                1.4;
-        }
+        0 15px 32px
+        var(--shadow-blue),
 
-        .trust-item i {
-            display:
-                block;
+        0 5px 15px
+        rgba(255, 255, 255, 0.45);
 
-            color:
-                #c89424;
+    backdrop-filter: blur(12px);
 
-            font-size:
-                17px;
+    -webkit-backdrop-filter: blur(12px);
 
-            margin-bottom:
-                7px;
-        }
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
 
-        .trust-item strong {
-            display:
-                block;
 
-            color:
-                #665568;
+/* Card hover */
 
-            font-size:
-                9px;
+.achievement:hover {
 
-            font-weight:
-                700;
-        }
+    transform: translateY(-5px);
 
-        .copyright {
-            text-align:
-                center;
+    box-shadow:
 
-            color:
-                #a59aa6;
+        0 20px 38px
+        rgba(70, 95, 135, 0.16),
 
-            font-size:
-                10px;
+        0 5px 20px
+        rgba(231, 137, 174, 0.08);
+}
 
-            margin-top:
-                23px;
-        }
 
-        @media (max-width: 950px) {
+/* =========================================================
+   AWARD IMAGE BOX
+   ========================================================= */
 
-            .login-page {
-                grid-template-columns:
-                    1fr;
-            }
+.achievement-image {
 
-            .login-showcase {
-                min-height:
-                    auto;
+    width: 100%;
 
-                padding:
-                    45px 35px;
+    height: 108px;
 
-                text-align:
-                    center;
+    padding: 5px;
 
-                align-items:
-                    center;
-            }
+    display: flex;
 
-            .showcase-content {
-                max-width:
-                    700px;
-            }
+    align-items: center;
 
-            .showcase-content > p {
-                margin-left:
-                    auto;
+    justify-content: center;
 
-                margin-right:
-                    auto;
-            }
+    border-radius: 12px;
 
-            .achievement-list {
-                justify-content:
-                    center;
-            }
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff,
+            #f7fbff
+        );
 
-            .login-area {
-                min-height:
-                    auto;
+    border:
+        1px solid #dce5f0;
 
-                padding:
-                    35px 20px 50px;
+    box-shadow:
+        inset 0 0 18px
+        rgba(111, 159, 232, 0.06);
 
-                border-left:
-                    none;
-            }
-        }
+    overflow: hidden;
+}
 
-        @media (max-width: 600px) {
 
-            .login-showcase {
-                padding:
-                    38px 20px 32px;
-            }
+/* Actual award image */
 
-            .brand {
-                margin-bottom:
-                    27px;
-            }
+.achievement-image img {
 
-            .brand-mark {
-                width:
-                    62px;
+    width: 100%;
+    height: 100%;
 
-                height:
-                    62px;
+    display: block;
 
-                font-size:
-                    30px;
+    object-fit: contain;
 
-                margin-left:
-                    auto;
+    object-position: center;
 
-                margin-right:
-                    auto;
-            }
+    border-radius: 8px;
+}
 
-            .brand h1 {
-                font-size:
-                    35px;
-            }
 
-            .brand p {
-                font-size:
-                    10px;
+/* =========================================================
+   AWARD TEXT
+   ========================================================= */
 
-                letter-spacing:
-                    2px;
-            }
+.achievement strong {
 
-            .showcase-content h2 {
-                font-size:
-                    31px;
-            }
+    display: block;
 
-            .showcase-content > p {
-                font-size:
-                    13px;
-            }
+    width: 100%;
 
-            .achievement {
-                min-width:
-                    135px;
-            }
+    margin-top: 10px;
 
-            .login-area {
-                padding:
-                    20px 14px 35px;
-            }
+    color: #354052;
 
-            .login-card {
-                padding:
-                    35px 22px 27px;
+    font-size: 11px;
 
-                border-radius:
-                    19px;
-            }
+    line-height: 1.35;
 
-            .login-heading h2 {
-                font-size:
-                    28px;
-            }
+    font-weight: 800;
+}
 
-            .trust-section {
-                gap:
-                    4px;
-            }
-        }
 
-        @media (max-width: 400px) {
+.achievement strong::before {
 
-            .brand h1 {
-                font-size:
-                    31px;
-            }
+    content: "✦";
 
-            .showcase-content h2 {
-                font-size:
-                    27px;
-            }
+    color: var(--pink-main);
 
-            .achievement {
-                min-width:
-                    100%;
+    margin-right: 6px;
+}
 
-                text-align:
-                    left;
 
-                display:
-                    flex;
+/* Hide old icons */
 
-                align-items:
-                    center;
+.achievement > i {
 
-                gap:
-                    10px;
-            }
+    display: none;
+}
 
-            .achievement i {
-                margin-bottom:
-                    0;
-            }
 
-            .login-card {
-                padding:
-                    32px 18px 25px;
-            }
+/* =========================================================
+   RIGHT LOGIN AREA
+   ========================================================= */
 
-            .trust-item {
-                font-size:
-                    8px;
-            }
+.login-area {
 
-            .trust-item strong {
-                font-size:
-                    8px;
-            }
-        }
+    min-height: 100vh;
 
-    </style>
+    padding: 45px 35px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    position: relative;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 252, 254, 0.96),
+            rgba(255, 255, 255, 0.98)
+        );
+
+    border-left:
+        1px solid rgba(255, 255, 255, 0.90);
+}
+
+
+/* Pink glow */
+
+.login-area::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 480px;
+    height: 480px;
+
+    border-radius: 50%;
+
+    top: -200px;
+    right: -210px;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255, 185, 211, 0.20),
+            transparent 68%
+        );
+
+    pointer-events: none;
+}
+
+
+/* Blue glow */
+
+.login-area::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 380px;
+    height: 380px;
+
+    border-radius: 50%;
+
+    bottom: -190px;
+    left: -180px;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(169, 205, 255, 0.20),
+            transparent 68%
+        );
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   LOGIN CARD
+   ========================================================= */
+
+.login-card {
+
+    width: 100%;
+
+    max-width: 410px;
+
+    padding:
+        42px 40px 34px;
+
+    position: relative;
+
+    z-index: 3;
+
+    overflow: hidden;
+
+    background:
+        rgba(255, 255, 255, 0.96);
+
+    border:
+        1px solid rgba(218, 225, 237, 0.85);
+
+    border-radius: 25px;
+
+    box-shadow:
+
+        0 30px 70px
+        rgba(67, 83, 117, 0.13),
+
+        0 8px 25px
+        rgba(231, 137, 174, 0.07);
+}
+
+
+/* =========================================================
+   CARD TOP LINE
+   ========================================================= */
+
+.login-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    right: 0;
+
+    top: 0;
+
+    height: 5px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #719fe7 0%,
+            #a49ee2 48%,
+            #e789ae 100%
+        );
+}
+
+
+/* Card glow */
+
+.login-card::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 200px;
+    height: 200px;
+
+    border-radius: 50%;
+
+    top: -105px;
+    right: -105px;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(231, 137, 174, 0.08),
+            transparent 70%
+        );
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   LOGIN HEADING
+   ========================================================= */
+
+.login-heading {
+
+    text-align: center;
+
+    position: relative;
+
+    z-index: 2;
+
+    margin-bottom: 28px;
+}
+
+
+.login-heading h2 {
+
+    font-family:
+        "Playfair Display",
+        Georgia,
+        serif;
+
+    font-size: 30px;
+
+    color: var(--blue-dark);
+
+    margin-bottom: 7px;
+
+    font-weight: 700;
+}
+
+
+.login-heading p {
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+    font-weight: 500;
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.error-message {
+
+    position: relative;
+
+    z-index: 3;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 12px 14px;
+
+    margin-bottom: 19px;
+
+    border-radius: 11px;
+
+    border:
+        1px solid #f0c5d6;
+
+    background: #fff3f7;
+
+    color: #b94d70;
+
+    font-size: 12px;
+
+    line-height: 1.5;
+}
+
+
+.error-message i {
+
+    color: var(--pink-dark);
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.login-form {
+
+    position: relative;
+
+    z-index: 3;
+}
+
+
+.form-group {
+
+    margin-bottom: 20px;
+}
+
+
+.form-group label {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #41495a;
+
+    font-size: 12px;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   INPUT WRAPPER
+   ========================================================= */
+
+.input-wrapper {
+
+    position: relative;
+}
+
+
+/* Input icon */
+
+.input-wrapper > i {
+
+    position: absolute;
+
+    left: 15px;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: #a0a9b9;
+
+    font-size: 13px;
+
+    z-index: 2;
+
+    pointer-events: none;
+
+    transition: color 0.2s ease;
+}
+
+
+/* Input */
+
+.input-wrapper input {
+
+    width: 100%;
+
+    height: 50px;
+
+    padding:
+        0 15px 0 43px;
+
+    border:
+        1px solid #dce3ed;
+
+    border-radius: 12px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: var(--text);
+
+    font-family: "Inter", sans-serif;
+
+    font-size: 13px;
+
+    box-shadow:
+        0 2px 8px
+        rgba(82, 91, 125, 0.03);
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+/* Input hover */
+
+.input-wrapper input:hover {
+
+    border-color: #c6d2e3;
+}
+
+
+/* Input focus */
+
+.input-wrapper input:focus {
+
+    border-color: var(--pink-main);
+
+    box-shadow:
+        0 0 0 4px
+        rgba(231, 137, 174, 0.10);
+}
+
+
+/* Icon focus */
+
+.input-wrapper:focus-within > i {
+
+    color: var(--pink-main);
+}
+
+
+/* Password bottom spacing */
+
+.form-group:nth-of-type(2) {
+
+    margin-bottom: 24px;
+}
+
+
+/* =========================================================
+   LOGIN BUTTON
+   ========================================================= */
+
+.login-button {
+
+    width: 100%;
+
+    height: 53px;
+
+    border: none;
+
+    border-radius: 13px;
+
+    position: relative;
+
+    overflow: hidden;
+
+    cursor: pointer;
+
+    background:
+        linear-gradient(
+            100deg,
+            #6e9ee7 0%,
+            #929fe0 48%,
+            #e486aa 100%
+        );
+
+    color: #ffffff;
+
+    font-family:
+        "Inter",
+        Arial,
+        sans-serif;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.4px;
+
+    box-shadow:
+
+        0 12px 25px
+        rgba(111, 159, 232, 0.20),
+
+        0 7px 17px
+        rgba(231, 137, 174, 0.11);
+
+    transition:
+        transform 0.22s ease,
+        box-shadow 0.22s ease,
+        filter 0.22s ease;
+}
+
+
+/* Button shine */
+
+.login-button::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: -100%;
+
+    width: 60%;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,0.24),
+            transparent
+        );
+
+    transform: skewX(-20deg);
+
+    transition: left 0.55s ease;
+}
+
+
+/* Button hover */
+
+.login-button:hover {
+
+    transform: translateY(-2px);
+
+    filter: brightness(1.03);
+
+    box-shadow:
+
+        0 16px 31px
+        rgba(111, 159, 232, 0.25),
+
+        0 9px 20px
+        rgba(231, 137, 174, 0.15);
+}
+
+
+.login-button:hover::before {
+
+    left: 130%;
+}
+
+
+/* Button click */
+
+.login-button:active {
+
+    transform: translateY(0);
+
+    box-shadow:
+        0 7px 15px
+        rgba(111, 159, 232, 0.18);
+}
+
+
+/* Button icon */
+
+.login-button i {
+
+    margin-right: 7px;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   TRUST SECTION
+   ========================================================= */
+
+.trust-section {
+
+    margin-top: 27px;
+
+    padding-top: 22px;
+
+    border-top:
+        1px solid #eee9ee;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 8px;
+
+    text-align: center;
+}
+
+
+/* Trust item */
+
+.trust-item {
+
+    color: #777e8e;
+
+    font-size: 9px;
+
+    line-height: 1.4;
+}
+
+
+/* Trust icon */
+
+.trust-item i {
+
+    width: 39px;
+    height: 39px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin: 0 auto 7px;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            145deg,
+            #e8f3ff,
+            #f8fbff
+        );
+
+    color: var(--blue-main);
+
+    font-size: 15px;
+
+    box-shadow:
+        0 6px 14px
+        rgba(111, 159, 232, 0.09);
+}
+
+
+/* Second icon */
+
+.trust-item:nth-child(2) i {
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffe8f1,
+            #fff8fb
+        );
+
+    color: var(--pink-main);
+}
+
+
+/* Third icon */
+
+.trust-item:nth-child(3) i {
+
+    background:
+        linear-gradient(
+            145deg,
+            #e8f3ff,
+            #f8fbff
+        );
+
+    color: #668fd1;
+}
+
+
+/* Trust title */
+
+.trust-item strong {
+
+    display: block;
+
+    color: #62697a;
+
+    font-size: 9px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   COPYRIGHT
+   ========================================================= */
+
+.copyright {
+
+    text-align: center;
+
+    margin-top: 22px;
+
+    color: #9a9fac;
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 950px) {
+
+    .login-page {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    .login-showcase {
+
+        min-height: auto;
+
+        padding:
+            55px 35px 45px;
+    }
+
+
+    .login-area {
+
+        min-height: auto;
+
+        padding:
+            45px 25px 55px;
+
+        border-left: none;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .login-showcase {
+
+        padding:
+            40px 20px 35px;
+    }
+
+
+    .brand {
+
+        margin-bottom: 25px;
+    }
+
+
+    .brand-mark {
+
+        width: 84px;
+        height: 84px;
+
+        margin-bottom: 13px;
+    }
+
+
+    .brand h1 {
+
+        font-size: 35px;
+    }
+
+
+    .brand p {
+
+        font-size: 9px;
+
+        letter-spacing: 2px;
+    }
+
+
+    .showcase-content h2 {
+
+        font-size: 31px;
+    }
+
+
+    .showcase-content > p {
+
+        font-size: 13px;
+    }
+
+
+    .achievement-list {
+
+        gap: 9px;
+    }
+
+
+    .achievement {
+
+        min-height: 145px;
+
+        padding: 9px;
+    }
+
+
+    .achievement-image {
+
+        height: 82px;
+    }
+
+
+    .achievement strong {
+
+        font-size: 9px;
+    }
+
+
+    .login-area {
+
+        padding:
+            25px 15px 40px;
+    }
+
+
+    .login-card {
+
+        padding:
+            35px 22px 27px;
+
+        border-radius: 20px;
+    }
+
+
+    .login-heading h2 {
+
+        font-size: 28px;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+    .brand h1 {
+
+        font-size: 31px;
+    }
+
+
+    .showcase-content h2 {
+
+        font-size: 27px;
+    }
+
+
+    .achievement-list {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    .achievement {
+
+        min-height: 105px;
+
+        display: grid;
+
+        grid-template-columns: 90px 1fr;
+
+        align-items: center;
+
+        text-align: left;
+
+        gap: 10px;
+    }
+
+
+    .achievement-image {
+
+        width: 90px;
+
+        height: 80px;
+
+        margin: 0;
+    }
+
+
+    .achievement strong {
+
+        font-size: 11px;
+
+        margin-top: 0;
+    }
+
+
+    .login-card {
+
+        padding:
+            32px 18px 25px;
+    }
+
+
+    .trust-item {
+
+        font-size: 8px;
+    }
+
+
+    .trust-item strong {
+
+        font-size: 8px;
+    }
+}
+
+</style>
+
 </head>
+
 
 <body>
 
-    <div class="login-page">
 
-        <section class="login-showcase">
+<div class="login-page">
 
-            <div class="brand">
 
-                <div class="brand-mark">
-                    S
-                </div>
+    <!-- =====================================================
+         LEFT SHOWCASE
+         ===================================================== -->
 
-                <h1>
-                    Ssrini Handicrafts
-                </h1>
+    <section class="login-showcase">
 
-                <p>
-                    Excellence in Handicrafts
-                </p>
+
+        <!-- BRAND -->
+
+        <div class="brand">
+
+
+            <div class="brand-mark">
+
+                <img
+                    src="../assets/images/logo.jpg"
+                    alt="SsRini Handicrafts Logo"
+                >
 
             </div>
 
 
-            <div class="showcase-content">
+            <h1>
+                SsRini Handicrafts
+            </h1>
+
+
+            <p>
+                Excellence in Handicrafts
+            </p>
+
+
+        </div>
+
+
+
+        <!-- SHOWCASE CONTENT -->
+
+        <div class="showcase-content">
+
+
+            <h2>
+                Admin Login
+            </h2>
+
+
+            <p>
+                Manage your store with confidence, quality and excellence.
+            </p>
+
+
+
+            <!-- =================================================
+                 AWARDS
+                 ================================================= -->
+
+            <div class="achievement-list">
+
+
+                <!-- IndiaMART -->
+
+                <div class="achievement">
+
+                    <div class="achievement-image">
+
+                        <img
+                            src="../assets/images/indiamart-award.png"
+                            alt="IndiaMART TrustSEAL Award"
+                        >
+
+                    </div>
+
+
+                    <strong>
+                        IndiaMART TrustSEAL
+                    </strong>
+
+                </div>
+
+
+
+                <!-- Award Winning -->
+
+                <div class="achievement">
+
+                    <div class="achievement-image">
+
+                        <img
+                            src="../assets/images/top-attendance-award.png"
+                            alt="Award Winning"
+                        >
+
+                    </div>
+
+
+                    <strong>
+                        Award Winning
+                    </strong>
+
+                </div>
+
+
+
+                <!-- Matrimaa -->
+
+                <div class="achievement">
+
+                    <div class="achievement-image">
+
+                        <img
+                            src="../assets/images/matrimaa-award.png"
+                            alt="Top Attendance Award"
+                        >
+
+                    </div>
+
+
+                    <strong>
+                        Top Attendance
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =====================================================
+         RIGHT LOGIN AREA
+         ===================================================== -->
+
+    <section class="login-area">
+
+
+        <div class="login-card">
+
+
+            <!-- LOGIN HEADING -->
+
+            <div class="login-heading">
 
                 <h2>
-                    Admin Login
+                    SsRini Handicrafts
                 </h2>
 
                 <p>
-                    Manage your store with confidence, quality and excellence.
+                    Admin Login
                 </p>
-
-
-                <div class="achievement-list">
-
-                    <div class="achievement">
-
-                        <i class="fa-solid fa-shield-halved"></i>
-
-                        <strong>
-                            IndiaMART TrustSEAL
-                        </strong>
-
-                    </div>
-
-
-                    <div class="achievement">
-
-                        <i class="fa-solid fa-trophy"></i>
-
-                        <strong>
-                            Award Winning
-                        </strong>
-
-                    </div>
-
-
-                    <div class="achievement">
-
-                        <i class="fa-solid fa-medal"></i>
-
-                        <strong>
-                            Top Attendance
-                        </strong>
-
-                    </div>
-
-                </div>
 
             </div>
 
-        </section>
 
 
-        <section class="login-area">
+            <!-- ERROR -->
 
-            <div class="login-card">
+            <?php if ($error !== ''): ?>
 
-                <div class="login-heading">
+                <p class="error-message">
 
-                    <h2>
-                        Ssrini Handicrafts
-                    </h2>
+                    <i class="fa-solid fa-circle-exclamation"></i>
 
-                    <p>
-                        Admin Login
-                    </p>
+                    <span>
+                        <?= htmlspecialchars(
+                            $error,
+                            ENT_QUOTES,
+                            'UTF-8'
+                        ) ?>
+                    </span>
+
+                </p>
+
+            <?php endif; ?>
+
+
+
+            <!-- LOGIN FORM -->
+
+            <form
+                method="POST"
+                action=""
+                class="login-form"
+            >
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email
+                    </label>
+
+
+                    <div class="input-wrapper">
+
+                        <i class="fa-regular fa-envelope"></i>
+
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            required
+                            autocomplete="username"
+                            placeholder=""
+                        >
+
+                    </div>
 
                 </div>
 
 
-                <?php if ($error !== ''): ?>
 
-                    <p class="error-message">
+                <!-- PASSWORD -->
 
-                        <i class="fa-solid fa-circle-exclamation"></i>
+                <div class="form-group">
 
-                        <span>
-                            <?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?>
-                        </span>
-
-                    </p>
-
-                <?php endif; ?>
+                    <label for="password">
+                        Password
+                    </label>
 
 
-                <form
-                    method="POST"
-                    action=""
-                    class="login-form"
-                >
-
-                    <div class="form-group">
-
-                        <label for="email">
-                            Email
-                        </label>
-
-                        <div class="input-wrapper">
-
-                            <i class="fa-regular fa-envelope"></i>
-
-                            <input
-                                type="email"
-                                id="email"
-                                name="email"
-                                required
-                                autocomplete="username"
-                            >
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label for="password">
-                            Password
-                        </label>
-
-                        <div class="input-wrapper">
-
-                            <i class="fa-solid fa-lock"></i>
-
-                            <input 
-                                type="password"
-                                id="password"
-                                name="password"
-                                requiredautocomplete="complete-password"
-                            >
-
-                        </div>
-
-                    </div>
-
-
-                    <button
-                        type="submit"
-                        class="login-button"
-                    >
+                    <div class="input-wrapper">
 
                         <i class="fa-solid fa-lock"></i>
 
-                        Login
 
-                    </button>
-
-                </form>
-
-
-                <div class="trust-section">
-
-                    <div class="trust-item">
-
-                        <i class="fa-solid fa-shield-halved"></i>
-
-                        <strong>
-                            Trusted
-                        </strong>
-
-                    </div>
-
-
-                    <div class="trust-item">
-
-                        <i class="fa-solid fa-award"></i>
-
-                        <strong>
-                            Excellence
-                        </strong>
-
-                    </div>
-
-
-                    <div class="trust-item">
-
-                        <i class="fa-solid fa-trophy"></i>
-
-                        <strong>
-                            Quality
-                        </strong>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            required
+                            autocomplete="current-password"
+                            placeholder=""
+                        >
 
                     </div>
 
                 </div>
 
 
-                <div class="copyright">
-                    Ssrini Handicrafts
+
+                <!-- LOGIN BUTTON -->
+
+                <button
+                    type="submit"
+                    class="login-button"
+                >
+
+                    <i class="fa-solid fa-lock"></i>
+
+                    Login
+
+                </button>
+
+
+            </form>
+
+
+
+            <!-- =================================================
+                 TRUST
+                 ================================================= -->
+
+            <div class="trust-section">
+
+
+                <div class="trust-item">
+
+                    <i class="fa-solid fa-shield-halved"></i>
+
+                    <strong>
+                        Trusted
+                    </strong>
+
                 </div>
+
+
+
+                <div class="trust-item">
+
+                    <i class="fa-solid fa-award"></i>
+
+                    <strong>
+                        Excellence
+                    </strong>
+
+                </div>
+
+
+
+                <div class="trust-item">
+
+                    <i class="fa-solid fa-trophy"></i>
+
+                    <strong>
+                        Quality
+                    </strong>
+
+                </div>
+
 
             </div>
 
-        </section>
 
-    </div>
+
+            <!-- COPYRIGHT -->
+
+            <div class="copyright">
+
+                SsRini Handicrafts
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+</div>
+
 
 </body>
+
 </html>

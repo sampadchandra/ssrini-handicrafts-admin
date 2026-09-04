@@ -24,28 +24,21 @@ $pageTitle = $pageTitle ?? 'Dashboard';
             <span class="menu-icon">☰</span>
         </button>
 
-
         <!-- =================================================
              PAGE TITLE
              ================================================= -->
 
         <h1>
-            <?= htmlspecialchars(
-                $pageTitle,
-                ENT_QUOTES,
-                'UTF-8'
-            ) ?>
+            <?= htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8') ?>
         </h1>
 
     </div>
-
 
     <!-- =================================================
          HEADER RIGHT
          ================================================= -->
 
     <div class="header-right">
-
 
         <!-- REFRESH -->
 
@@ -64,7 +57,6 @@ $pageTitle = $pageTitle ?? 'Dashboard';
 
         </button>
 
-
         <!-- PROFILE -->
 
         <div class="profile">
@@ -79,29 +71,17 @@ $pageTitle = $pageTitle ?? 'Dashboard';
 
             </div>
 
-
             <div class="profile-info">
 
                 <span class="profile-name">
 
-                    <?= htmlspecialchars(
-                        $_SESSION['admin_name'] ?? 'Admin',
-                        ENT_QUOTES,
-                        'UTF-8'
-                    ) ?>
+                    <?= htmlspecialchars($_SESSION['admin_name'] ?? 'Admin', ENT_QUOTES, 'UTF-8') ?>
 
                 </span>
 
-
                 <span class="profile-role">
 
-                    <?= htmlspecialchars(
-                        ucfirst(
-                            $_SESSION['admin_role'] ?? 'admin'
-                        ),
-                        ENT_QUOTES,
-                        'UTF-8'
-                    ) ?>
+                    <?= htmlspecialchars(ucfirst($_SESSION['admin_role'] ?? 'admin'), ENT_QUOTES, 'UTF-8') ?>
 
                 </span>
 

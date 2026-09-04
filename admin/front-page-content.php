@@ -54,20 +54,16 @@ require_once __DIR__ . '/../includes/auth.php';
 requireAdminLogin();
 
 
-/**
- * =========================================================
- * PAGE CONFIGURATION
- * =========================================================
- */
+
+ // PAGE CONFIGURATION
+
 
 $pageTitle = 'Front Page Content';
 
 
-/**
- * =========================================================
- * HELPER FUNCTIONS
- * =========================================================
- */
+
+ // HELPER FUNCTIONS
+
 
 
 /**

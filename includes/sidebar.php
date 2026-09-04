@@ -297,19 +297,15 @@ $currentPage = basename($_SERVER['PHP_SELF']);
  
     <div class="sidebar-footer"> 
  
-        <a 
-            href="logout.php" 
-            class="nav-item logout-link" 
-        > 
- 
-            <span class="nav-icon"> 
-                🚪 
-            </span> 
- 
+        <a href="logout.php" 
+            class="nav-item logout-link"> 
+
             <span> 
                 Logout 
             </span> 
- 
+            <span class="nav-icon">
+                <=
+            </span>
         </a> 
  
     </div> 
