@@ -56,8 +56,7 @@ if (empty($_SESSION['settings_csrf_token'])) {
     $_SESSION['settings_csrf_token'] =
         bin2hex(random_bytes(32));
 }
-$csrfToken =
-    $_SESSION['settings_csrf_token'];
+$csrfToken = $_SESSION['settings_csrf_token'];
 /*
 |--------------------------------------------------------------------------
 | ENSURE STORE SETTINGS COLUMNS
@@ -69,38 +68,14 @@ $csrfToken =
 |
 |--------------------------------------------------------------------------
 */
-$requiredColumns = [
-    'store_name' => "VARCHAR(150) NULL",
-    'tagline' => "VARCHAR(255) NULL",
-    'email' => "VARCHAR(150) NULL",
-    'phone' => "VARCHAR(30) NULL",
-    'whatsapp' => "VARCHAR(30) NULL",
-    'address' => "TEXT NULL",
-    'city' => "VARCHAR(100) NULL",
-    'state' => "VARCHAR(100) NULL",
-    'pincode' => "VARCHAR(20) NULL",
-    'instagram_url' => "VARCHAR(500) NULL",
-    'facebook_url' => "VARCHAR(500) NULL",
-    'twitter_url' => "VARCHAR(500) NULL",
-    'website_url' => "VARCHAR(500) NULL",
-    'currency' => "VARCHAR(10) NULL DEFAULT 'INR'",
-    'shipping_charge' => "DECIMAL(10,2) NULL DEFAULT 0",
-    'free_shipping_min' => "DECIMAL(10,2) NULL DEFAULT 0",
-    'cod_enabled' => "TINYINT(1) NULL DEFAULT 1",
-    'online_payment_enabled' => "TINYINT(1) NULL DEFAULT 0",
-    'low_stock_threshold' => "INT NULL DEFAULT 5",
-    'maintenance_mode' => "TINYINT(1) NULL DEFAULT 0",
-    'updated_at' => "TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
-];
+$requiredColumns = [ 'store_name' => "VARCHAR(150) NULL", 'tagline' => "VARCHAR(255) NULL", 'email' => "VARCHAR(150) NULL", 'phone' => "VARCHAR(30) NULL", 'whatsapp' => "VARCHAR(30) NULL", 'address' => "TEXT NULL", 'city' => "VARCHAR(100) NULL", 'state' => "VARCHAR(100) NULL", 'pincode' => "VARCHAR(20) NULL", 'instagram_url' => "VARCHAR(500) NULL", 'facebook_url' => "VARCHAR(500) NULL", 'twitter_url' => "VARCHAR(500) NULL", 'website_url' => "VARCHAR(500) NULL", 'currency' => "VARCHAR(10) NULL DEFAULT 'INR'", 'shipping_charge' => "DECIMAL(10,2) NULL DEFAULT 0", 'free_shipping_min' => "DECIMAL(10,2) NULL DEFAULT 0", 'cod_enabled' => "TINYINT(1) NULL DEFAULT 1", 'online_payment_enabled' => "TINYINT(1) NULL DEFAULT 0", 'low_stock_threshold' => "INT NULL DEFAULT 5", 'maintenance_mode' => "TINYINT(1) NULL DEFAULT 0", 'updated_at' => "TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" ];
 /*
 |--------------------------------------------------------------------------
 | GET EXISTING COLUMNS
 |--------------------------------------------------------------------------
 */
 try {
-    $columnStatement = $pdo->query(
-        "SHOW COLUMNS FROM store_settings"
-    );
+$columnStatement = $pdo->query( "SHOW COLUMNS FROM store_settings" );
     $existingColumns = [];
     while ($column = $columnStatement->fetch(PDO::FETCH_ASSOC)) {
         $existingColumns[] = $column['Field'];
@@ -112,8 +87,7 @@ try {
     */
     foreach ($requiredColumns as $columnName => $definition) {
         if (!in_array($columnName, $existingColumns, true)) {
-            $safeColumnName =
-                '`' . str_replace('`', '', $columnName) . '`';
+$safeColumnName = '`' . str_replace('`', '', $columnName) . '`';
             $pdo->exec(
                 "ALTER TABLE store_settings
                  ADD COLUMN {$safeColumnName} {$definition}"
@@ -121,9 +95,7 @@ try {
         }
     }
 } catch (Throwable $exception) {
-    $databaseError =
-        'Unable to prepare store settings table: ' .
-        $exception->getMessage();
+$databaseError = 'Unable to prepare store settings table: ' . $exception->getMessage();
 }
 /*
 |--------------------------------------------------------------------------
@@ -131,42 +103,10 @@ try {
 |--------------------------------------------------------------------------
 */
 try {
-    $countStatement =
-        $pdo->query(
-            "SELECT COUNT(*) FROM store_settings"
-        );
-    $settingsCount =
-        (int)$countStatement->fetchColumn();
+$countStatement = $pdo->query( "SELECT COUNT(*) FROM store_settings" );
+$settingsCount = (int)$countStatement->fetchColumn();
     if ($settingsCount === 0) {
-        $insertStatement =
-            $pdo->prepare(
-                "
-                INSERT INTO store_settings
-                (
-                    store_name,
-                    tagline,
-                    currency,
-                    shipping_charge,
-                    free_shipping_min,
-                    cod_enabled,
-                    online_payment_enabled,
-                    low_stock_threshold,
-                    maintenance_mode
-                )
-                VALUES
-                (
-                    :store_name,
-                    :tagline,
-                    :currency,
-                    :shipping_charge,
-                    :free_shipping_min,
-                    :cod_enabled,
-                    :online_payment_enabled,
-                    :low_stock_threshold,
-                    :maintenance_mode
-                )
-                "
-            );
+$insertStatement = $pdo->prepare( " INSERT INTO store_settings ( store_name, tagline, currency, shipping_charge, free_shipping_min, cod_enabled, online_payment_enabled, low_stock_threshold, maintenance_mode ) VALUES ( :store_name, :tagline, :currency, :shipping_charge, :free_shipping_min, :cod_enabled, :online_payment_enabled, :low_stock_threshold, :maintenance_mode ) " );
         $insertStatement->execute([
             ':store_name' =>
                 'Ssrini Handicrafts',
@@ -189,9 +129,7 @@ try {
         ]);
     }
 } catch (Throwable $exception) {
-    $databaseError =
-        'Unable to initialize store settings: ' .
-        $exception->getMessage();
+$databaseError = 'Unable to initialize store settings: ' . $exception->getMessage();
 }
 /*
 |--------------------------------------------------------------------------
@@ -206,60 +144,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     | CSRF CHECK
     |--------------------------------------------------------------------------
     */
-    $submittedToken =
-        $_POST['csrf_token'] ?? '';
+$submittedToken = $_POST['csrf_token'] ?? '';
     if (
         !hash_equals(
             $csrfToken,
             (string)$submittedToken
         )
     ) {
-        $errorMessage =
-            'Invalid security token. Please refresh the page and try again.';
+$errorMessage = 'Invalid security token. Please refresh the page and try again.';
     } else {
         /*
         |--------------------------------------------------------------------------
         | COLLECT VALUES
         |--------------------------------------------------------------------------
         */
-        $storeName =
-            postValue('store_name');
-        $tagline =
-            postValue('tagline');
-        $email =
-            postValue('email');
-        $phone =
-            postValue('phone');
-        $whatsapp =
-            postValue('whatsapp');
-        $address =
-            postValue('address');
-        $city =
-            postValue('city');
-        $state =
-            postValue('state');
-        $pincode =
-            postValue('pincode');
-        $instagramUrl =
-            postValue('instagram_url');
-        $facebookUrl =
-            postValue('facebook_url');
-        $twitterUrl =
-            postValue('twitter_url');
-        $websiteUrl =
-            postValue('website_url');
-        $currency =
-            postValue('currency', 'INR');
-        $shippingCharge =
-            postValue('shipping_charge', '0');
-        $freeShippingMin =
-            postValue('free_shipping_min', '0');
-        $lowStockThreshold =
-            postValue('low_stock_threshold', '5');
-        $codEnabled =
-            isset($_POST['cod_enabled'])
-                ? 1
-                : 0;
+$storeName = postValue('store_name');
+$tagline = postValue('tagline');
+$email = postValue('email');
+$phone = postValue('phone');
+$whatsapp = postValue('whatsapp');
+$address = postValue('address');
+$city = postValue('city');
+$state = postValue('state');
+$pincode = postValue('pincode');
+$instagramUrl = postValue('instagram_url');
+$facebookUrl = postValue('facebook_url');
+$twitterUrl = postValue('twitter_url');
+$websiteUrl = postValue('website_url');
+$currency = postValue('currency', 'INR');
+$shippingCharge = postValue('shipping_charge', '0');
+$freeShippingMin = postValue('free_shipping_min', '0');
+$lowStockThreshold = postValue('low_stock_threshold', '5');
+$codEnabled = isset($_POST['cod_enabled']) ? 1 : 0;
         /*
         |--------------------------------------------------------------------------
         | ONLINE PAYMENT
@@ -267,115 +183,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         | Kept disabled according to current project requirement.
         |--------------------------------------------------------------------------
         */
-        $onlinePaymentEnabled =
-            isset($_POST['online_payment_enabled'])
-                ? 1
-                : 0;
+$onlinePaymentEnabled = isset($_POST['online_payment_enabled']) ? 1 : 0;
         /*
         |--------------------------------------------------------------------------
         | MAINTENANCE MODE
         |--------------------------------------------------------------------------
         */
-        $maintenanceMode =
-            isset($_POST['maintenance_mode'])
-                ? 1
-                : 0;
+$maintenanceMode = isset($_POST['maintenance_mode']) ? 1 : 0;
         /*
         |--------------------------------------------------------------------------
         | VALIDATION
         |--------------------------------------------------------------------------
         */
         if ($storeName === '') {
-            $errorMessage =
-                'Store name is required.';
+$errorMessage = 'Store name is required.';
         } elseif (
             $email !== '' &&
             !filter_var($email, FILTER_VALIDATE_EMAIL)
         ) {
-            $errorMessage =
-                'Please enter a valid email address.';
+$errorMessage = 'Please enter a valid email address.';
         } elseif (
             !is_numeric($shippingCharge) ||
             (float)$shippingCharge < 0
         ) {
-            $errorMessage =
-                'Shipping charge must be a valid positive number.';
+$errorMessage = 'Shipping charge must be a valid positive number.';
         } elseif (
             !is_numeric($freeShippingMin) ||
             (float)$freeShippingMin < 0
         ) {
-            $errorMessage =
-                'Free shipping minimum must be a valid positive number.';
+$errorMessage = 'Free shipping minimum must be a valid positive number.';
         } elseif (
             !is_numeric($lowStockThreshold) ||
             (int)$lowStockThreshold < 0
         ) {
-            $errorMessage =
-                'Low stock threshold must be a valid number.';
+$errorMessage = 'Low stock threshold must be a valid number.';
         } else {
             /*
             |--------------------------------------------------------------------------
             | NORMALIZE VALUES
             |--------------------------------------------------------------------------
             */
-            $shippingCharge =
-                number_format(
-                    (float)$shippingCharge,
-                    2,
-                    '.',
-                    ''
-                );
-            $freeShippingMin =
-                number_format(
-                    (float)$freeShippingMin,
-                    2,
-                    '.',
-                    ''
-                );
-            $lowStockThreshold =
-                (int)$lowStockThreshold;
+$shippingCharge = number_format( (float)$shippingCharge, 2, '.', '' );
+$freeShippingMin = number_format( (float)$freeShippingMin, 2, '.', '' );
+$lowStockThreshold = (int)$lowStockThreshold;
             /*
             |--------------------------------------------------------------------------
             | UPDATE SETTINGS
             |--------------------------------------------------------------------------
             */
             try {
-                $updateStatement =
-                    $pdo->prepare(
-                        "
-                        UPDATE store_settings
-                        SET
-                            store_name = :store_name,
-                            tagline = :tagline,
-                            email = :email,
-                            phone = :phone,
-                            whatsapp = :whatsapp,
-                            address = :address,
-                            city = :city,
-                            state = :state,
-                            pincode = :pincode,
-                            instagram_url = :instagram_url,
-                            facebook_url = :facebook_url,
-                            twitter_url = :twitter_url,
-                            website_url = :website_url,
-                            currency = :currency,
-                            shipping_charge = :shipping_charge,
-                            free_shipping_min = :free_shipping_min,
-                            cod_enabled = :cod_enabled,
-                            online_payment_enabled = :online_payment_enabled,
-                            low_stock_threshold = :low_stock_threshold,
-                            maintenance_mode = :maintenance_mode
-                        WHERE id = (
-                            SELECT id
-                            FROM (
-                                SELECT id
-                                FROM store_settings
-                                ORDER BY id ASC
-                                LIMIT 1
-                            ) AS first_settings
-                        )
-                        "
-                    );
+$updateStatement = $pdo->prepare( " UPDATE store_settings SET store_name = :store_name, tagline = :tagline, email = :email, phone = :phone, whatsapp = :whatsapp, address = :address, city = :city, state = :state, pincode = :pincode, instagram_url = :instagram_url, facebook_url = :facebook_url, twitter_url = :twitter_url, website_url = :website_url, currency = :currency, shipping_charge = :shipping_charge, free_shipping_min = :free_shipping_min, cod_enabled = :cod_enabled, online_payment_enabled = :online_payment_enabled, low_stock_threshold = :low_stock_threshold, maintenance_mode = :maintenance_mode WHERE id = ( SELECT id FROM ( SELECT id FROM store_settings ORDER BY id ASC LIMIT 1 ) AS first_settings ) " );
                 $updateStatement->execute([
                     ':store_name' =>
                         $storeName,
@@ -418,12 +275,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ':maintenance_mode' =>
                         $maintenanceMode
                 ]);
-                $successMessage =
-                    'Store settings updated successfully.';
+$successMessage = 'Store settings updated successfully.';
             } catch (Throwable $exception) {
-                $errorMessage =
-                    'Unable to save settings: ' .
-                    $exception->getMessage();
+$errorMessage = 'Unable to save settings: ' . $exception->getMessage();
             }
         }
     }
@@ -433,60 +287,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 | LOAD CURRENT SETTINGS
 |--------------------------------------------------------------------------
 */
-$settings = [
-    'store_name' =>
-        'Ssrini Handicrafts',
-    'tagline' =>
-        'Authentic handcrafted products from Bengal',
-    'email' =>
-        '',
-    'phone' =>
-        '',
-    'whatsapp' =>
-        '',
-    'address' =>
-        '',
-    'city' =>
-        '',
-    'state' =>
-        '',
-    'pincode' =>
-        '',
-    'instagram_url' =>
-        '',
-    'facebook_url' =>
-        '',
-    'twitter_url' =>
-        '',
-    'website_url' =>
-        '',
-    'currency' =>
-        'INR',
-    'shipping_charge' =>
-        '0.00',
-    'free_shipping_min' =>
-        '0.00',
-    'cod_enabled' =>
-        1,
-    'online_payment_enabled' =>
-        0,
-    'low_stock_threshold' =>
-        5,
-    'maintenance_mode' =>
-        0
-];
+$settings = [ 'store_name' => 'Ssrini Handicrafts', 'tagline' => 'Authentic handcrafted products from Bengal', 'email' => '', 'phone' => '', 'whatsapp' => '', 'address' => '', 'city' => '', 'state' => '', 'pincode' => '', 'instagram_url' => '', 'facebook_url' => '', 'twitter_url' => '', 'website_url' => '', 'currency' => 'INR', 'shipping_charge' => '0.00', 'free_shipping_min' => '0.00', 'cod_enabled' => 1, 'online_payment_enabled' => 0, 'low_stock_threshold' => 5, 'maintenance_mode' => 0 ];
 try {
-    $settingsStatement =
-        $pdo->query(
-            "
-            SELECT *
-            FROM store_settings
-            ORDER BY id ASC
-            LIMIT 1
-            "
-        );
-    $databaseSettings =
-        $settingsStatement->fetch(PDO::FETCH_ASSOC);
+$settingsStatement = $pdo->query( " SELECT * FROM store_settings ORDER BY id ASC LIMIT 1 " );
+$databaseSettings = $settingsStatement->fetch(PDO::FETCH_ASSOC);
     if ($databaseSettings) {
         foreach ($settings as $key => $defaultValue) {
             if (array_key_exists($key, $databaseSettings)) {
@@ -496,9 +300,7 @@ try {
         }
     }
 } catch (Throwable $exception) {
-    $errorMessage =
-        'Unable to load current settings: ' .
-        $exception->getMessage();
+$errorMessage = 'Unable to load current settings: ' . $exception->getMessage();
 }
 /*
 |--------------------------------------------------------------------------
@@ -559,8 +361,7 @@ if (
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     >
-    <style>
-        /*
+    <style>        /*
         |--------------------------------------------------------------------------
         | RESET
         |--------------------------------------------------------------------------
@@ -574,31 +375,22 @@ if (
             scroll-behavior: smooth;
         }
         body {
-            font-family:
-                "Inter",
-                Arial,
-                sans-serif;
-            background:
-                #f7f5fb;
-            color:
-                #25212d;
-            min-height:
-                100vh;
+font-family: "Inter", Arial, sans-serif;
+background: #f7f5fb;
+color: #25212d;
+min-height: 100vh;
         }
         button,
         input,
         textarea,
         select {
-            font-family:
-                inherit;
+font-family: inherit;
         }
         button {
-            cursor:
-                pointer;
+cursor: pointer;
         }
         a {
-            text-decoration:
-                none;
+text-decoration: none;
         }
         /*
         |--------------------------------------------------------------------------
@@ -606,10 +398,8 @@ if (
         |--------------------------------------------------------------------------
         */
         .settings-page {
-            min-height:
-                100vh;
-            padding:
-                32px;
+min-height: 100vh;
+padding: 32px;
         }
         /*
         |--------------------------------------------------------------------------
@@ -617,72 +407,43 @@ if (
         |--------------------------------------------------------------------------
         */
         .page-header {
-            display:
-                flex;
-            justify-content:
-                space-between;
-            align-items:
-                center;
-            gap:
-                20px;
-            margin-bottom:
-                28px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+gap: 20px;
+margin-bottom: 28px;
         }
         .page-title h1 {
-            font-size:
-                30px;
-            line-height:
-                1.2;
-            font-weight:
-                800;
-            color:
-                #25212d;
-            margin-bottom:
-                7px;
+font-size: 30px;
+line-height: 1.2;
+font-weight: 800;
+color: #25212d;
+margin-bottom: 7px;
         }
         .page-title p {
-            font-size:
-                14px;
-            color:
-                #77717f;
+font-size: 14px;
+color: #77717f;
         }
         .header-refresh-btn {
-            border:
-                1px solid #e4dfea;
-            background:
-                #ffffff;
-            color:
-                #5c5365;
-            height:
-                44px;
-            padding:
-                0 16px;
-            border-radius:
-                11px;
-            display:
-                inline-flex;
-            align-items:
-                center;
-            gap:
-                8px;
-            font-size:
-                13px;
-            font-weight:
-                600;
-            transition:
-                all .2s ease;
-            box-shadow:
-                0 5px 15px rgba(30,20,50,.04);
+border: 1px solid #e4dfea;
+background: #ffffff;
+color: #5c5365;
+height: 44px;
+padding: 0 16px;
+border-radius: 11px;
+display: inline-flex;
+align-items: center;
+gap: 8px;
+font-size: 13px;
+font-weight: 600;
+transition: all .2s ease;
+box-shadow: 0 5px 15px rgba(30,20,50,.04);
         }
         .header-refresh-btn:hover {
-            transform:
-                translateY(-2px);
-            border-color:
-                #b98be1;
-            color:
-                #7627c9;
-            box-shadow:
-                0 8px 20px rgba(118,39,201,.10);
+transform: translateY(-2px);
+border-color: #b98be1;
+color: #7627c9;
+box-shadow: 0 8px 20px rgba(118,39,201,.10);
         }
         /*
         |--------------------------------------------------------------------------
@@ -690,38 +451,24 @@ if (
         |--------------------------------------------------------------------------
         */
         .alert {
-            border-radius:
-                13px;
-            padding:
-                14px 17px;
-            margin-bottom:
-                20px;
-            display:
-                flex;
-            align-items:
-                center;
-            gap:
-                11px;
-            font-size:
-                13px;
-            font-weight:
-                600;
+border-radius: 13px;
+padding: 14px 17px;
+margin-bottom: 20px;
+display: flex;
+align-items: center;
+gap: 11px;
+font-size: 13px;
+font-weight: 600;
         }
         .alert-success {
-            background:
-                #edf9f1;
-            color:
-                #207443;
-            border:
-                1px solid #cdebd7;
+background: #edf9f1;
+color: #207443;
+border: 1px solid #cdebd7;
         }
         .alert-error {
-            background:
-                #fff0f0;
-            color:
-                #b42318;
-            border:
-                1px solid #f2cccc;
+background: #fff0f0;
+color: #b42318;
+border: 1px solid #f2cccc;
         }
         /*
         |--------------------------------------------------------------------------
@@ -729,14 +476,10 @@ if (
         |--------------------------------------------------------------------------
         */
         .settings-layout {
-            display:
-                grid;
-            grid-template-columns:
-                minmax(0, 1fr) 310px;
-            gap:
-                24px;
-            align-items:
-                start;
+display: grid;
+grid-template-columns: minmax(0, 1fr) 310px;
+gap: 24px;
+align-items: start;
         }
         /*
         |--------------------------------------------------------------------------
@@ -744,74 +487,43 @@ if (
         |--------------------------------------------------------------------------
         */
         .settings-card {
-            background:
-                #ffffff;
-            border-radius:
-                18px;
-            border:
-                1px solid #eee9f4;
-            box-shadow:
-                0 8px 25px rgba(30,20,50,.06);
-            overflow:
-                hidden;
-            margin-bottom:
-                24px;
+background: #ffffff;
+border-radius: 18px;
+border: 1px solid #eee9f4;
+box-shadow: 0 8px 25px rgba(30,20,50,.06);
+overflow: hidden;
+margin-bottom: 24px;
         }
         .card-header {
-            padding:
-                21px 24px;
-            border-bottom:
-                1px solid #eeeaf2;
-            display:
-                flex;
-            align-items:
-                center;
-            gap:
-                13px;
+padding: 21px 24px;
+border-bottom: 1px solid #eeeaf2;
+display: flex;
+align-items: center;
+gap: 13px;
         }
         .card-icon {
-            width:
-                40px;
-            height:
-                40px;
-            border-radius:
-                11px;
-            display:
-                flex;
-            align-items:
-                center;
-            justify-content:
-                center;
-            color:
-                #7627c9;
-            background:
-                linear-gradient(
-                    135deg,
-                    #f2e8fa,
-                    #fcecf8
-                );
-            flex-shrink:
-                0;
+width: 40px;
+height: 40px;
+border-radius: 11px;
+display: flex;
+align-items: center;
+justify-content: center;
+color: #7627c9;
+background: linear-gradient( 135deg, #f2e8fa, #fcecf8 );
+flex-shrink: 0;
         }
         .card-header h2 {
-            font-size:
-                16px;
-            font-weight:
-                700;
-            color:
-                #292430;
-            margin-bottom:
-                3px;
+font-size: 16px;
+font-weight: 700;
+color: #292430;
+margin-bottom: 3px;
         }
         .card-header p {
-            color:
-                #817987;
-            font-size:
-                12px;
+color: #817987;
+font-size: 12px;
         }
         .card-body {
-            padding:
-                24px;
+padding: 24px;
         }
         /*
         |--------------------------------------------------------------------------
@@ -819,86 +531,53 @@ if (
         |--------------------------------------------------------------------------
         */
         .form-grid {
-            display:
-                grid;
-            grid-template-columns:
-                repeat(2, minmax(0, 1fr));
-            gap:
-                18px;
+display: grid;
+grid-template-columns: repeat(2, minmax(0, 1fr));
+gap: 18px;
         }
         .form-group {
-            display:
-                flex;
-            flex-direction:
-                column;
+display: flex;
+flex-direction: column;
         }
         .form-group.full {
-            grid-column:
-                1 / -1;
+grid-column: 1 / -1;
         }
         .form-group label {
-            font-size:
-                12px;
-            font-weight:
-                700;
-            color:
-                #443c4c;
-            margin-bottom:
-                8px;
+font-size: 12px;
+font-weight: 700;
+color: #443c4c;
+margin-bottom: 8px;
         }
         .required {
-            color:
-                #c52b9f;
+color: #c52b9f;
         }
         .form-control {
-            width:
-                100%;
-            min-height:
-                45px;
-            border:
-                1px solid #e3dfea;
-            border-radius:
-                10px;
-            padding:
-                0 13px;
-            outline:
-                none;
-            color:
-                #292430;
-            background:
-                #ffffff;
-            font-size:
-                13px;
-            transition:
-                border .2s ease,
-                box-shadow .2s ease,
-                transform .2s ease;
+width: 100%;
+min-height: 45px;
+border: 1px solid #e3dfea;
+border-radius: 10px;
+padding: 0 13px;
+outline: none;
+color: #292430;
+background: #ffffff;
+font-size: 13px;
+transition: border .2s ease, box-shadow .2s ease, transform .2s ease;
         }
         textarea.form-control {
-            min-height:
-                105px;
-            padding:
-                12px 13px;
-            resize:
-                vertical;
-            line-height:
-                1.6;
+min-height: 105px;
+padding: 12px 13px;
+resize: vertical;
+line-height: 1.6;
         }
         .form-control:focus {
-            border-color:
-                #9b48d1;
-            box-shadow:
-                0 0 0 3px rgba(155,72,209,.10);
+border-color: #9b48d1;
+box-shadow: 0 0 0 3px rgba(155,72,209,.10);
         }
         .form-help {
-            color:
-                #8b8392;
-            font-size:
-                11px;
-            margin-top:
-                6px;
-            line-height:
-                1.5;
+color: #8b8392;
+font-size: 11px;
+margin-top: 6px;
+line-height: 1.5;
         }
         /*
         |--------------------------------------------------------------------------
@@ -906,28 +585,19 @@ if (
         |--------------------------------------------------------------------------
         */
         .input-wrapper {
-            position:
-                relative;
+position: relative;
         }
         .input-icon {
-            position:
-                absolute;
-            left:
-                13px;
-            top:
-                50%;
-            transform:
-                translateY(-50%);
-            color:
-                #9b91a1;
-            font-size:
-                13px;
-            pointer-events:
-                none;
+position: absolute;
+left: 13px;
+top: 50%;
+transform: translateY(-50%);
+color: #9b91a1;
+font-size: 13px;
+pointer-events: none;
         }
         .input-wrapper .form-control {
-            padding-left:
-                37px;
+padding-left: 37px;
         }
         /*
         |--------------------------------------------------------------------------
@@ -935,140 +605,83 @@ if (
         |--------------------------------------------------------------------------
         */
         .toggle-row {
-            display:
-                flex;
-            justify-content:
-                space-between;
-            align-items:
-                center;
-            gap:
-                15px;
-            padding:
-                15px 0;
-            border-bottom:
-                1px solid #f0edf3;
+display: flex;
+justify-content: space-between;
+align-items: center;
+gap: 15px;
+padding: 15px 0;
+border-bottom: 1px solid #f0edf3;
         }
         .toggle-row:last-child {
-            border-bottom:
-                none;
-            padding-bottom:
-                0;
+border-bottom: none;
+padding-bottom: 0;
         }
         .toggle-row:first-child {
-            padding-top:
-                0;
+padding-top: 0;
         }
         .toggle-info {
-            display:
-                flex;
-            align-items:
-                flex-start;
-            gap:
-                12px;
+display: flex;
+align-items: flex-start;
+gap: 12px;
         }
         .toggle-info-icon {
-            width:
-                36px;
-            height:
-                36px;
-            border-radius:
-                9px;
-            display:
-                flex;
-            align-items:
-                center;
-            justify-content:
-                center;
-            background:
-                #f6f1fa;
-            color:
-                #7627c9;
-            flex-shrink:
-                0;
+width: 36px;
+height: 36px;
+border-radius: 9px;
+display: flex;
+align-items: center;
+justify-content: center;
+background: #f6f1fa;
+color: #7627c9;
+flex-shrink: 0;
         }
         .toggle-text strong {
-            display:
-                block;
-            font-size:
-                13px;
-            color:
-                #332d39;
-            margin-bottom:
-                4px;
+display: block;
+font-size: 13px;
+color: #332d39;
+margin-bottom: 4px;
         }
         .toggle-text span {
-            display:
-                block;
-            font-size:
-                11px;
-            color:
-                #8a8290;
-            line-height:
-                1.5;
+display: block;
+font-size: 11px;
+color: #8a8290;
+line-height: 1.5;
         }
         .switch {
-            position:
-                relative;
-            width:
-                48px;
-            height:
-                26px;
-            flex-shrink:
-                0;
+position: relative;
+width: 48px;
+height: 26px;
+flex-shrink: 0;
         }
         .switch input {
-            opacity:
-                0;
-            width:
-                0;
-            height:
-                0;
+opacity: 0;
+width: 0;
+height: 0;
         }
         .slider {
-            position:
-                absolute;
-            inset:
-                0;
-            background:
-                #d8d2dc;
-            border-radius:
-                999px;
-            transition:
-                .25s;
+position: absolute;
+inset: 0;
+background: #d8d2dc;
+border-radius: 999px;
+transition: .25s;
         }
         .slider:before {
-            content:
-                "";
-            position:
-                absolute;
-            height:
-                20px;
-            width:
-                20px;
-            left:
-                3px;
-            top:
-                3px;
-            background:
-                #ffffff;
-            border-radius:
-                50%;
-            box-shadow:
-                0 2px 5px rgba(0,0,0,.18);
-            transition:
-                .25s;
+content: "";
+position: absolute;
+height: 20px;
+width: 20px;
+left: 3px;
+top: 3px;
+background: #ffffff;
+border-radius: 50%;
+box-shadow: 0 2px 5px rgba(0,0,0,.18);
+transition: .25s;
         }
         .switch input:checked + .slider {
-            background:
-                linear-gradient(
-                    135deg,
-                    #7627c9,
-                    #c52b9f
-                );
+background: linear-gradient( 135deg, #7627c9, #c52b9f );
         }
         .switch input:checked + .slider:before {
-            transform:
-                translateX(22px);
+transform: translateX(22px);
         }
         /*
         |--------------------------------------------------------------------------
@@ -1076,58 +689,36 @@ if (
         |--------------------------------------------------------------------------
         */
         .info-card {
-            background:
-                #ffffff;
-            border:
-                1px solid #eee9f4;
-            border-radius:
-                18px;
-            padding:
-                21px;
-            box-shadow:
-                0 8px 25px rgba(30,20,50,.06);
-            margin-bottom:
-                20px;
+background: #ffffff;
+border: 1px solid #eee9f4;
+border-radius: 18px;
+padding: 21px;
+box-shadow: 0 8px 25px rgba(30,20,50,.06);
+margin-bottom: 20px;
         }
         .info-card h3 {
-            font-size:
-                14px;
-            font-weight:
-                700;
-            margin-bottom:
-                14px;
-            color:
-                #332d39;
+font-size: 14px;
+font-weight: 700;
+margin-bottom: 14px;
+color: #332d39;
         }
         .info-list {
-            display:
-                flex;
-            flex-direction:
-                column;
-            gap:
-                11px;
+display: flex;
+flex-direction: column;
+gap: 11px;
         }
         .info-item {
-            display:
-                flex;
-            align-items:
-                flex-start;
-            gap:
-                10px;
-            color:
-                #716979;
-            font-size:
-                12px;
-            line-height:
-                1.5;
+display: flex;
+align-items: flex-start;
+gap: 10px;
+color: #716979;
+font-size: 12px;
+line-height: 1.5;
         }
         .info-item i {
-            width:
-                17px;
-            color:
-                #9b48d1;
-            margin-top:
-                2px;
+width: 17px;
+color: #9b48d1;
+margin-top: 2px;
         }
         /*
         |--------------------------------------------------------------------------
@@ -1135,52 +726,30 @@ if (
         |--------------------------------------------------------------------------
         */
         .payment-notice {
-            border:
-                1px solid #eadcf4;
-            background:
-                linear-gradient(
-                    135deg,
-                    #fbf7fe,
-                    #fff8fc
-                );
-            border-radius:
-                13px;
-            padding:
-                15px;
-            display:
-                flex;
-            gap:
-                11px;
-            align-items:
-                flex-start;
-            margin-top:
-                20px;
+border: 1px solid #eadcf4;
+background: linear-gradient( 135deg, #fbf7fe, #fff8fc );
+border-radius: 13px;
+padding: 15px;
+display: flex;
+gap: 11px;
+align-items: flex-start;
+margin-top: 20px;
         }
         .payment-notice i {
-            color:
-                #7627c9;
-            margin-top:
-                2px;
+color: #7627c9;
+margin-top: 2px;
         }
         .payment-notice strong {
-            display:
-                block;
-            font-size:
-                12px;
-            color:
-                #43394b;
-            margin-bottom:
-                4px;
+display: block;
+font-size: 12px;
+color: #43394b;
+margin-bottom: 4px;
         }
         .payment-notice span {
-            display:
-                block;
-            font-size:
-                11px;
-            color:
-                #817987;
-            line-height:
-                1.5;
+display: block;
+font-size: 11px;
+color: #817987;
+line-height: 1.5;
         }
         /*
         |--------------------------------------------------------------------------
@@ -1188,88 +757,50 @@ if (
         |--------------------------------------------------------------------------
         */
         .save-bar {
-            position:
-                sticky;
-            bottom:
-                18px;
-            z-index:
-                20;
-            background:
-                rgba(255,255,255,.94);
-            backdrop-filter:
-                blur(12px);
-            border:
-                1px solid #e9e2ef;
-            border-radius:
-                15px;
-            padding:
-                12px 14px;
-            box-shadow:
-                0 12px 30px rgba(30,20,50,.12);
-            display:
-                flex;
-            justify-content:
-                space-between;
-            align-items:
-                center;
-            gap:
-                15px;
+position: sticky;
+bottom: 18px;
+z-index: 20;
+background: rgba(255,255,255,.94);
+backdrop-filter: blur(12px);
+border: 1px solid #e9e2ef;
+border-radius: 15px;
+padding: 12px 14px;
+box-shadow: 0 12px 30px rgba(30,20,50,.12);
+display: flex;
+justify-content: space-between;
+align-items: center;
+gap: 15px;
         }
         .save-status {
-            color:
-                #766d7e;
-            font-size:
-                11px;
+color: #766d7e;
+font-size: 11px;
         }
         .save-status i {
-            color:
-                #55a66f;
-            margin-right:
-                5px;
+color: #55a66f;
+margin-right: 5px;
         }
         .save-btn {
-            border:
-                none;
-            min-height:
-                44px;
-            padding:
-                0 21px;
-            border-radius:
-                11px;
-            color:
-                #ffffff;
-            background:
-                linear-gradient(
-                    135deg,
-                    #7627c9,
-                    #c52b9f
-                );
-            font-size:
-                13px;
-            font-weight:
-                700;
-            display:
-                inline-flex;
-            align-items:
-                center;
-            justify-content:
-                center;
-            gap:
-                8px;
-            box-shadow:
-                0 8px 18px rgba(118,39,201,.25);
-            transition:
-                all .22s ease;
+border: none;
+min-height: 44px;
+padding: 0 21px;
+border-radius: 11px;
+color: #ffffff;
+background: linear-gradient( 135deg, #7627c9, #c52b9f );
+font-size: 13px;
+font-weight: 700;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+gap: 8px;
+box-shadow: 0 8px 18px rgba(118,39,201,.25);
+transition: all .22s ease;
         }
         .save-btn:hover {
-            transform:
-                translateY(-2px);
-            box-shadow:
-                0 11px 24px rgba(118,39,201,.32);
+transform: translateY(-2px);
+box-shadow: 0 11px 24px rgba(118,39,201,.32);
         }
         .save-btn:active {
-            transform:
-                translateY(0);
+transform: translateY(0);
         }
         /*
         |--------------------------------------------------------------------------
@@ -1277,42 +808,28 @@ if (
         |--------------------------------------------------------------------------
         */
         .quick-link {
-            display:
-                flex;
-            align-items:
-                center;
-            justify-content:
-                space-between;
-            padding:
-                11px 0;
-            border-bottom:
-                1px solid #f0edf3;
-            color:
-                #5f5867;
-            font-size:
-                12px;
-            font-weight:
-                600;
-            transition:
-                color .2s ease;
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 11px 0;
+border-bottom: 1px solid #f0edf3;
+color: #5f5867;
+font-size: 12px;
+font-weight: 600;
+transition: color .2s ease;
         }
         .quick-link:last-child {
-            border-bottom:
-                none;
-            padding-bottom:
-                0;
+border-bottom: none;
+padding-bottom: 0;
         }
         .quick-link:first-child {
-            padding-top:
-                0;
+padding-top: 0;
         }
         .quick-link:hover {
-            color:
-                #7627c9;
+color: #7627c9;
         }
         .quick-link i {
-            font-size:
-                10px;
+font-size: 10px;
         }
         /*
         |--------------------------------------------------------------------------
@@ -1321,76 +838,57 @@ if (
         */
         @media (max-width: 1050px) {
             .settings-layout {
-                grid-template-columns:
-                    1fr;
+grid-template-columns: 1fr;
             }
             .settings-sidebar {
-                display:
-                    grid;
-                grid-template-columns:
-                    repeat(2, minmax(0, 1fr));
-                gap:
-                    20px;
+display: grid;
+grid-template-columns: repeat(2, minmax(0, 1fr));
+gap: 20px;
             }
             .settings-sidebar .info-card {
-                margin-bottom:
-                    0;
+margin-bottom: 0;
             }
         }
         @media (max-width: 700px) {
             .settings-page {
-                padding:
-                    20px 15px;
+padding: 20px 15px;
             }
             .page-header {
-                align-items:
-                    flex-start;
-                flex-direction:
-                    column;
+align-items: flex-start;
+flex-direction: column;
             }
             .form-grid {
-                grid-template-columns:
-                    1fr;
+grid-template-columns: 1fr;
             }
             .form-group.full {
-                grid-column:
-                    auto;
+grid-column: auto;
             }
             .card-header,
             .card-body {
-                padding:
-                    18px;
+padding: 18px;
             }
             .settings-sidebar {
-                grid-template-columns:
-                    1fr;
+grid-template-columns: 1fr;
             }
             .save-bar {
-                align-items:
-                    stretch;
-                flex-direction:
-                    column;
+align-items: stretch;
+flex-direction: column;
             }
             .save-btn {
-                width:
-                    100%;
+width: 100%;
             }
         }
         @media (max-width: 450px) {
             .page-title h1 {
-                font-size:
-                    25px;
+font-size: 25px;
             }
             .card-header {
-                align-items:
-                    flex-start;
+align-items: flex-start;
             }
             .toggle-row {
-                align-items:
-                    flex-start;
+align-items: flex-start;
             }
-        }
-    </style>
+        }</style>
 </head>
 <body>
 <main class="settings-page">
@@ -1922,7 +1420,7 @@ if (
                                 Online Payment Status
                             </strong>
                             <span>
-                                Online payment is currently kept as a configurable option, but your current project setup can continue using Cash On Delivery.
+                                Online payment is not available for now.
                             </span>
                         </div>
                     </div>
@@ -2173,8 +1671,7 @@ function validateSettingsForm() {
 */
 setTimeout(
     function () {
-        const success =
-            document.querySelector('.alert-success');
+const success = document.querySelector('.alert-success');
         if (success) {
             success.style.transition = 'opacity .4s ease, transform .4s ease';
             success.style.opacity = '0';
