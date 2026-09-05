@@ -301,6 +301,25 @@ ol {
 }
 
 
+/* SIDEBAR MOBILE BACKDROP */
+.sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 24, 40, 0.4);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 999;
+    display: none;
+    opacity: 0;
+    transition: opacity var(--transition);
+}
+
+.sidebar-backdrop.show {
+    display: block;
+    opacity: 1;
+}
+
+
 /* =========================================================
    SIDEBAR BRAND
    ========================================================= */
@@ -890,7 +909,7 @@ ol {
     background:
         transparent;
 
-    overflow: hidden;
+    overflow: visible; /* Fixed from hidden to prevent dropdown clipping */
 }
 
 
@@ -2668,6 +2687,8 @@ select.form-control {
 
     font-size: 14px;
 
+    line-height: 1;
+
     z-index: 2;
 }
 
@@ -3340,7 +3361,7 @@ select.form-control {
     .mini-stats {
 
         grid-template-columns:
-            1fr 1fr;
+            1fr;
     }
 
 
@@ -3681,3 +3702,510 @@ textarea:focus-visible {
 /* =========================================================
    END — SSRINI HANDICRAFTS PREMIUM ADMIN CSS
    ========================================================= */
+
+
+/* =========================================================
+   SSRINI HANDICRAFTS — FINAL STABILITY FIXES
+   ---------------------------------------------------------
+   These overrides fix layout/overflow/background issues
+   without changing the existing sidebar design.
+   ========================================================= */
+
+/* Prevent horizontal page overflow caused by cards/grids. */
+html, body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* Keep the main content inside the available viewport. */
+.main-area {
+    min-width: 0;
+    width: auto;
+}
+
+/* Let grid/flex children shrink instead of pushing the page wider. */
+.page-content,
+.page-content > *,
+.card,
+.table-card,
+.dashboard-grid,
+.two-column,
+.three-column,
+.stats-grid,
+.mini-stats,
+.toolbar,
+.toolbar-left,
+.toolbar-right,
+.craft-hero,
+.craft-hero-content,
+.craft-hero-art {
+    min-width: 0;
+}
+
+/* Background artwork remains behind content and scrolls naturally. */
+.page-content {
+    overflow: visible;
+    isolation: isolate;
+}
+
+/* Keep the dashboard artwork subtle and contained. */
+.page-content::before {
+    pointer-events: none;
+    z-index: -2;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+}
+
+/* Keep all actual page content above the artwork. */
+.page-content > * {
+    position: relative;
+    z-index: 2;
+}
+
+/* Do not blend the Ganesh/hero artwork with the dashboard background. */
+.page-content .craft-hero,
+.page-content .craft-hero-art {
+    isolation: isolate;
+}
+
+.page-content .craft-hero-art img {
+    mix-blend-mode: normal;
+    opacity: .95;
+}
+
+/* Tables must scroll inside their own area, never expand the page. */
+.table-wrapper {
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: visible;
+}
+
+/* Images must never create horizontal overflow. */
+img {
+    max-width: 100%;
+}
+
+/* Better narrow-screen behavior for the dashboard grid. */
+@media (max-width: 1200px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dashboard-grid,
+    .settings-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .page-content {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid,
+    .mini-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================================================
+   END — FINAL STABILITY FIXES
+   ========================================================= */
+
+
+   /* =========================================================
+   PREMIUM ADMIN HEADER
+   SSRINI HANDICRAFTS
+   ========================================================= */
+
+.top-header {
+    position: sticky;
+    top: 0;
+    height: var(--header-height);
+    min-height: 68px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.97),
+            rgba(250,248,255,.94)
+        );
+    border-bottom: 1px solid rgba(122,92,220,.12);
+    box-shadow:
+        0 1px 0 rgba(255,255,255,.9) inset,
+        0 8px 28px rgba(44,32,80,.055);
+    backdrop-filter: blur(22px) saturate(150%);
+    -webkit-backdrop-filter: blur(22px) saturate(150%);
+    z-index: 900;
+}
+
+/* Soft premium glow */
+.top-header::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 1px;
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(139,92,246,.25),
+            rgba(236,72,153,.18),
+            transparent
+        );
+    pointer-events: none;
+}
+
+.header-left {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.header-left h1 {
+    margin: 0;
+    color: #171526;
+    font-size: 19px;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: -.45px;
+    white-space: nowrap;
+}
+
+/* =========================================================
+   HEADER RIGHT
+   ========================================================= */
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    min-width: 0;
+}
+
+/* =========================================================
+   ALL HEADER BUTTONS
+   ========================================================= */
+
+.top-header .header-button {
+    position: relative;
+    min-height: 40px;
+    padding: 0 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #596075;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.98),
+            rgba(248,247,252,.94)
+        );
+    border: 1px solid rgba(117,103,158,.16);
+    border-radius: 11px;
+    box-shadow:
+        0 2px 5px rgba(39,28,70,.035),
+        0 7px 18px rgba(39,28,70,.045),
+        inset 0 1px 0 rgba(255,255,255,.95);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: -.05px;
+    transition:
+        color .22s ease,
+        border-color .22s ease,
+        background .22s ease,
+        box-shadow .22s ease,
+        transform .22s ease;
+}
+
+.top-header .header-button::before {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    border-radius: 10px;
+    background:
+        linear-gradient(
+            120deg,
+            rgba(255,255,255,.55),
+            transparent 45%
+        );
+    pointer-events: none;
+}
+
+.top-header .header-button:hover {
+    color: #7048dc;
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff,
+            #f8f4ff
+        );
+    border-color: rgba(124,87,230,.28);
+    box-shadow:
+        0 4px 8px rgba(67,45,125,.05),
+        0 10px 24px rgba(124,87,230,.12),
+        inset 0 1px 0 #fff;
+    transform: translateY(-2px);
+}
+
+.top-header .header-button:active {
+    transform: translateY(0);
+    box-shadow:
+        0 2px 6px rgba(39,28,70,.06);
+}
+
+/* Refresh icon */
+#refreshButton {
+    min-width: 91px;
+}
+
+#refreshButton:first-letter {
+    font-size: 13px;
+}
+
+#refreshButton:hover {
+    color: #7c3aed;
+}
+
+/* =========================================================
+   MOBILE MENU BUTTON
+   ========================================================= */
+
+.top-header .mobile-menu-button {
+    width: 40px;
+    min-width: 40px;
+    padding: 0;
+    border-radius: 11px;
+}
+
+.mobile-menu-button .menu-icon {
+    font-size: 17px;
+    line-height: 1;
+    font-weight: 700;
+}
+
+/* =========================================================
+   PREMIUM PROFILE
+   ========================================================= */
+
+.top-header .profile {
+    position: relative;
+    min-height: 46px;
+    margin-left: 2px;
+    padding: 5px 9px 5px 7px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid rgba(117,103,158,.13);
+    border-radius: 14px;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.98),
+            rgba(248,246,253,.94)
+        );
+    box-shadow:
+        0 3px 8px rgba(39,28,70,.035),
+        0 8px 22px rgba(39,28,70,.055),
+        inset 0 1px 0 rgba(255,255,255,.95);
+    transition:
+        border-color .22s ease,
+        box-shadow .22s ease,
+        transform .22s ease;
+}
+
+.top-header .profile:hover {
+    border-color: rgba(124,87,230,.23);
+    box-shadow:
+        0 5px 12px rgba(39,28,70,.045),
+        0 12px 28px rgba(124,87,230,.10),
+        inset 0 1px 0 #fff;
+    transform: translateY(-1px);
+}
+
+/* =========================================================
+   PROFILE AVATAR
+   ========================================================= */
+
+.top-header .profile-avatar {
+    position: relative;
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background:
+        linear-gradient(
+            135deg,
+            #7c3aed,
+            #a855f7 45%,
+            #ec4899
+        );
+    box-shadow:
+        0 5px 14px rgba(124,58,237,.20);
+    overflow: hidden;
+}
+
+.top-header .profile-avatar::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.34),
+            transparent 45%
+        );
+    pointer-events: none;
+}
+
+.top-header .profile-avatar img {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 9px !important;
+}
+
+/* =========================================================
+   PROFILE TEXT
+   ========================================================= */
+
+.top-header .profile-info {
+    min-width: 105px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.top-header .profile-name {
+    color: #1d1a2b;
+    font-size: 12px;
+    line-height: 1.2;
+    font-weight: 800;
+    letter-spacing: -.12px;
+    white-space: nowrap;
+}
+
+.top-header .profile-role {
+    color: #9290a0;
+    font-size: 10px;
+    line-height: 1.2;
+    font-weight: 600;
+    letter-spacing: .15px;
+}
+
+/* =========================================================
+   PREMIUM PAGE TITLE ACCENT
+   ========================================================= */
+
+.header-left h1::after {
+    content: "";
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    margin-left: 7px;
+    margin-bottom: 3px;
+    border-radius: 50%;
+    background:
+        linear-gradient(
+            135deg,
+            #7c3aed,
+            #ec4899
+        );
+    box-shadow:
+        0 0 0 3px rgba(124,58,237,.08);
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media(max-width: 768px) {
+    .top-header {
+        min-height: 62px;
+        padding: 0 14px;
+        gap: 10px;
+    }
+
+    .header-left {
+        gap: 9px;
+    }
+
+    .header-left h1 {
+        font-size: 17px;
+    }
+
+    .header-right {
+        gap: 7px;
+    }
+
+    #refreshButton {
+        min-width: 40px;
+        width: 40px;
+        padding: 0;
+    }
+
+    #refreshButton span {
+        display: none;
+    }
+
+    .top-header .profile {
+        min-height: 40px;
+        padding: 3px 5px 3px 3px;
+        gap: 6px;
+        border-radius: 11px;
+    }
+
+    .top-header .profile-avatar {
+        width: 34px;
+        height: 34px;
+        min-width: 34px;
+        border-radius: 10px;
+    }
+
+    .top-header .profile-info {
+        display: none;
+    }
+}
+
+@media(max-width: 480px) {
+    .top-header {
+        padding: 0 10px;
+    }
+
+    .header-left h1 {
+        font-size: 16px;
+    }
+
+    .header-left h1::after {
+        display: none;
+    }
+
+    .top-header .header-button {
+        min-height: 38px;
+    }
+}

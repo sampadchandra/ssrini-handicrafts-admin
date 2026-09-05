@@ -1106,9 +1106,9 @@ require_once __DIR__ . '/../includes/sidebar.php';
 <!-- =========================================================
      MOBILE SIDEBAR BUTTON
 ========================================================= -->
-<button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
+<!-- <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
     ☰
-</button>
+</button> -->
 
 <!-- =========================================================
      MOBILE SIDEBAR OVERLAY

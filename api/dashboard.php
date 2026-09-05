@@ -64,26 +64,29 @@ $adminEmail = $_SESSION['admin_email'] ?? 'admin@ssrini.com';
         }
 
         :root {
-            --blue-dark: #101e4a;
-            --blue: #224ac7;
-            --blue-light: #568eff;
-            --pink: #e03b75;
-            --pink-light: #ffb4cd;
-            --pink-soft: #ffe8f0;
-            --sky-soft: #e5f1ff;
-            --blue-soft: #cfe0ff;
+            /* Updated to ensure high contrast and readability */
+            --blue-dark: #0f172a; 
+            --blue: #2563eb;
+            --blue-light: #76a7ff;
+            --pink: #db2777;
+            --pink-light: #fbcfe8;
+            --pink-soft: #fdf2f8;
+            --sky-soft: #eff6ff;
+            --blue-soft: #dceaff;
             --white: #ffffff;
-            --cream: #fffdfd;
-            --text: #192233;       /* High-contrast dark text */
-            --muted: #48546b;      /* Darkened muted text for sharp visibility */
-            --border: #cbd5e5;     /* Clearer definition borders */
-            --shadow: rgba(30, 50, 95, 0.16);
+            --cream: #f8fafc;
+            --text: #1e293b; /* Darker for high visibility */
+            --muted: #475569; /* Clearer muted text */
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.025);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -4px rgba(0,0,0,0.025);
         }
 
         body {
             font-family: Inter, Arial, sans-serif;
             color: var(--text);
-            background: linear-gradient(135deg, #e9f4ff 0%, #f2f7ff 30%, #fffafd 62%, #ffe8f2 100%);
+            background: linear-gradient(135deg, #f1f5f9 0%, #f8fafc 50%, #fdf2f8 100%);
             min-height: 100vh;
             display: flex;
             overflow-x: hidden;
@@ -93,7 +96,7 @@ $adminEmail = $_SESSION['admin_email'] ?? 'admin@ssrini.com';
         .sidebar {
             width: 260px;
             background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(20px);
             border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
@@ -103,18 +106,19 @@ $adminEmail = $_SESSION['admin_email'] ?? 'admin@ssrini.com';
             left: 0;
             z-index: 100;
             overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.02);
         }
 
         .sidebar-brand {
             padding: 24px 20px;
             font-family: "Playfair Display", Georgia, serif;
-            font-size: 20px;
+            font-size: 22px;
             color: var(--blue-dark);
             font-weight: 700;
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .sidebar-brand span {
@@ -129,11 +133,11 @@ $adminEmail = $_SESSION['admin_email'] ?? 'admin@ssrini.com';
 
         .menu-category {
             font-size: 11px;
-            font-weight: 800;
+            font-weight: 700;
             text-transform: uppercase;
             color: var(--muted);
             letter-spacing: 1px;
-            padding: 10px 12px 6px;
+            padding: 12px 12px 6px;
             margin-top: 10px;
         }
 
@@ -141,11 +145,11 @@ $adminEmail = $_SESSION['admin_email'] ?? 'admin@ssrini.com';
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 11px 14px;
+            padding: 12px 14px;
             color: var(--text);
             text-decoration: none;
-            font-size: 13.5px;
-            font-weight: 600;
+            font-size: 14px;
+            font-weight: 500;
             border-radius: 10px;
             transition: all 0.2s ease;
         }
@@ -154,14 +158,16 @@ $adminEmail = $_SESSION['admin_email'] ?? 'admin@ssrini.com';
         .sidebar-menu li a.active {
             background: var(--sky-soft);
             color: var(--blue);
-            font-weight: 700;
+            font-weight: 600;
+            transform: translateX(4px);
         }
 
         .sidebar-menu li a i {
-            font-size: 15px;
+            font-size: 16px;
             width: 20px;
             text-align: center;
             color: var(--muted);
+            transition: color 0.2s;
         }
 
         .sidebar-menu li a:hover i,
@@ -178,17 +184,18 @@ $adminEmail = $_SESSION['admin_email'] ?? 'admin@ssrini.com';
             display: flex;
             align-items: center;
             gap: 10px;
-            color: #b82d55;
+            color: #e11d48;
             text-decoration: none;
-            font-size: 13.5px;
-            font-weight: 700;
+            font-size: 14px;
+            font-weight: 600;
             padding: 10px 14px;
             border-radius: 10px;
-            transition: background 0.2s;
+            transition: all 0.2s;
         }
 
         .logout-btn:hover {
-            background: #fff3f7;
+            background: #ffe4e6;
+            transform: translateY(-1px);
         }
 
         /* ================= MAIN CONTENT ================= */
@@ -202,7 +209,7 @@ $adminEmail = $_SESSION['admin_email'] ?? 'admin@ssrini.com';
 
         /* ================= HEADER ================= */
         .top-header {
-            height: 70px;
+            height: 74px;
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
@@ -213,11 +220,12 @@ $adminEmail = $_SESSION['admin_email'] ?? 'admin@ssrini.com';
             position: sticky;
             top: 0;
             z-index: 90;
+            box-shadow: var(--shadow-sm);
         }
 
         .header-title {
             font-family: "Playfair Display", Georgia, serif;
-            font-size: 22px;
+            font-size: 24px;
             color: var(--blue-dark);
             font-weight: 700;
         }
@@ -225,7 +233,7 @@ $adminEmail = $_SESSION['admin_email'] ?? 'admin@ssrini.com';
         .header-right {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 20px;
         }
 
         .refresh-btn {
@@ -234,37 +242,38 @@ $adminEmail = $_SESSION['admin_email'] ?? 'admin@ssrini.com';
             padding: 8px 16px;
             border-radius: 8px;
             color: var(--text);
-            font-size: 13.5px;
-            font-weight: 700;
+            font-size: 13px;
+            font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
             text-decoration: none;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+            box-shadow: var(--shadow-sm);
             transition: all 0.2s;
         }
 
         .refresh-btn:hover {
             background: var(--sky-soft);
             color: var(--blue);
-            border-color: #a8bce0;
+            border-color: #bfdbfe;
+            transform: translateY(-1px);
         }
 
         .admin-profile {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             background: var(--white);
-            padding: 6px 14px 6px 6px;
+            padding: 6px 16px 6px 6px;
             border-radius: 30px;
             border: 1px solid var(--border);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            box-shadow: var(--shadow-sm);
         }
 
         .admin-avatar {
-            width: 36px;
-            height: 36px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--pink), var(--blue));
             display: flex;
@@ -272,36 +281,39 @@ $adminEmail = $_SESSION['admin_email'] ?? 'admin@ssrini.com';
             justify-content: center;
             color: white;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 15px;
         }
 
         .admin-info h4 {
-            font-size: 13.5px;
+            font-size: 14px;
             font-weight: 700;
-            color: var(--text);
+            color: var(--blue-dark);
             line-height: 1.2;
         }
 
         .admin-info span {
-            font-size: 11.5px;
-            font-weight: 600;
+            font-size: 12px;
             color: var(--muted);
+            font-weight: 500;
         }
 
         /* ================= PAGE CONTAINER ================= */
         .dashboard-body {
             padding: 30px 35px;
             flex: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
         }
 
         /* BANNER */
         .banner {
-            background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(252,242,247,0.95));
+            background: linear-gradient(135deg, rgba(255,255,255,1), rgba(253,242,248,0.9));
             border: 1px solid var(--border);
             border-radius: 20px;
             padding: 35px 40px;
             margin-bottom: 30px;
-            box-shadow: 0 15px 35px var(--shadow);
+            box-shadow: var(--shadow-md);
             position: relative;
             overflow: hidden;
         }
@@ -309,22 +321,21 @@ $adminEmail = $_SESSION['admin_email'] ?? 'admin@ssrini.com';
         .banner::after {
             content: "";
             position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 300px;
-            height: 120px;
-            background: radial-gradient(circle, rgba(224,59,117,0.12), transparent 70%);
+            right: 0;
+            top: 0;
+            width: 400px;
+            height: 100%;
+            background: radial-gradient(circle at right, rgba(219,39,119,0.08), transparent 70%);
             pointer-events: none;
         }
 
         .banner-tag {
             color: var(--pink);
-            font-size: 12.5px;
-            font-weight: 800;
+            font-size: 13px;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 6px;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -332,87 +343,78 @@ $adminEmail = $_SESSION['admin_email'] ?? 'admin@ssrini.com';
 
         .banner h1 {
             font-family: "Playfair Display", Georgia, serif;
-            font-size: clamp(28px, 3vw, 42px);
+            font-size: clamp(32px, 3vw, 42px);
             color: var(--blue-dark);
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             font-weight: 800;
         }
 
         .banner p {
             color: var(--muted);
-            font-size: 14.5px;
-            font-weight: 500;
+            font-size: 15px;
             max-width: 500px;
-        }
-
-        .banner-divider {
-            width: 80px;
-            height: 3px;
-            background: linear-gradient(90deg, var(--pink), var(--blue));
-            border-radius: 2px;
-            margin-top: 15px;
+            font-weight: 500;
         }
 
         /* STATS GRID */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-            gap: 20px;
+            gap: 24px;
             margin-bottom: 30px;
         }
 
         .stat-card {
-            background: rgba(255, 255, 255, 0.95);
+            background: #ffffff;
             border: 1px solid var(--border);
             border-radius: 16px;
-            padding: 22px 24px;
-            box-shadow: 0 10px 25px var(--shadow);
+            padding: 24px;
+            box-shadow: var(--shadow-md);
             position: relative;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s ease;
         }
 
         .stat-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(30, 50, 95, 0.2);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: #cbd5e1;
         }
 
         .stat-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
             background: var(--sky-soft);
             color: var(--blue);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
-            margin-bottom: 15px;
+            font-size: 20px;
+            margin-bottom: 16px;
         }
 
         .stat-card:nth-child(2) .stat-icon { background: var(--pink-soft); color: var(--pink); }
-        .stat-card:nth-child(3) .stat-icon { background: #eef9f0; color: #2ecc71; }
-        .stat-card:nth-child(4) .stat-icon { background: #fef5e7; color: #f39c12; }
+        .stat-card:nth-child(3) .stat-icon { background: #dcfce7; color: #16a34a; }
+        .stat-card:nth-child(4) .stat-icon { background: #fef9c3; color: #ca8a04; }
 
         .stat-label {
-            font-size: 12.5px;
-            font-weight: 700;
+            font-size: 14px;
+            font-weight: 600;
             color: var(--muted);
-            margin-bottom: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
+            margin-bottom: 6px;
         }
 
         .stat-value {
-            font-size: 26px;
+            font-size: 28px;
             font-weight: 800;
             color: var(--blue-dark);
         }
 
         .stat-sub {
             font-size: 12px;
-            font-weight: 600;
-            color: var(--muted);
-            margin-top: 6px;
+            color: #64748b;
+            margin-top: 8px;
+            font-weight: 500;
         }
 
         /* CONTENT SECTION GRID */
@@ -428,51 +430,61 @@ $adminEmail = $_SESSION['admin_email'] ?? 'admin@ssrini.com';
             }
         }
 
-        /* PANEL CARDS */
+        /* PANEL CARDS (Premium Feel) */
         .panel {
-            background: rgba(255, 255, 255, 0.95);
+            background: #ffffff;
             border: 1px solid var(--border);
-            border-radius: 18px;
+            border-radius: 20px;
             padding: 24px;
-            box-shadow: 0 10px 25px var(--shadow);
+            box-shadow: var(--shadow-md);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .panel:hover {
+            box-shadow: var(--shadow-lg);
         }
 
         .panel-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
         }
 
         .panel-title h3 {
-            font-size: 17px;
-            font-weight: 800;
+            font-size: 18px;
+            font-weight: 700;
             color: var(--blue-dark);
+            margin-bottom: 4px;
         }
 
         .panel-title p {
-            font-size: 12.5px;
-            font-weight: 600;
+            font-size: 13px;
             color: var(--muted);
-            margin-top: 2px;
+            font-weight: 500;
         }
 
         .view-all-btn {
-            font-size: 12.5px;
+            font-size: 13px;
             font-weight: 700;
             color: var(--blue);
             background: var(--sky-soft);
-            padding: 6px 14px;
+            padding: 8px 16px;
             border-radius: 8px;
             text-decoration: none;
-            transition: background 0.2s;
+            transition: all 0.2s;
+            border: 1px solid #bfdbfe;
         }
 
         .view-all-btn:hover {
-            background: var(--blue-soft);
+            background: #dbeafe;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
         }
 
-        /* TABLE */
+        /* PREMIUM TABLE (Fixed Text Visibility) */
         .table-responsive {
             width: 100%;
             overflow-x: auto;
@@ -482,25 +494,34 @@ $adminEmail = $_SESSION['admin_email'] ?? 'admin@ssrini.com';
             width: 100%;
             border-collapse: collapse;
             text-align: left;
-            font-size: 13.5px;
+            font-size: 14px;
         }
 
         th {
             color: var(--blue-dark);
-            font-weight: 800;
-            font-size: 11.5px;
+            background: var(--cream);
+            font-weight: 700;
+            font-size: 12px;
             text-transform: uppercase;
-            padding: 12px;
+            padding: 14px 16px;
             border-bottom: 2px solid var(--border);
-            letter-spacing: 0.6px;
-            background: #f7faff;
+            letter-spacing: 0.5px;
+            border-radius: 6px 6px 0 0;
         }
 
         td {
-            padding: 14px 12px;
-            border-bottom: 1px solid #e8edf5;
+            padding: 16px;
+            border-bottom: 1px solid #f1f5f9;
             color: var(--text);
             font-weight: 500;
+        }
+
+        tbody tr {
+            transition: background 0.2s;
+        }
+
+        tbody tr:hover {
+            background: var(--cream);
         }
 
         tr:last-child td {
@@ -508,124 +529,128 @@ $adminEmail = $_SESSION['admin_email'] ?? 'admin@ssrini.com';
         }
 
         .badge {
-            padding: 5px 11px;
-            border-radius: 6px;
-            font-size: 11.5px;
-            font-weight: 800;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.5px;
         }
 
-        .badge-pending { background: #fef5e7; color: #b75100; }
-        .badge-delivered { background: #eef9f0; color: #1e8449; }
-        .badge-shipped { background: var(--sky-soft); color: var(--blue); }
-        .badge-processing { background: #f4ecf7; color: #7d3c98; }
+        .badge-pending { background: #fef9c3; color: #ca8a04; border: 1px solid #fde047; }
+        .badge-delivered { background: #dcfce7; color: #16a34a; border: 1px solid #86efac; }
+        .badge-shipped { background: var(--sky-soft); color: var(--blue); border: 1px solid #bfdbfe; }
+        .badge-processing { background: #f3e8ff; color: #9333ea; border: 1px solid #d8b4fe; }
 
         .empty-state {
             text-align: center;
-            padding: 40px 20px;
+            padding: 50px 20px;
             color: var(--muted);
-            font-weight: 600;
         }
 
         .empty-state i {
-            font-size: 36px;
-            color: var(--pink);
-            margin-bottom: 12px;
+            font-size: 42px;
+            color: var(--pink-light);
+            margin-bottom: 16px;
             display: block;
         }
+        
+        .empty-state strong {
+            color: var(--blue-dark);
+            font-size: 16px;
+            display: block;
+            margin-bottom: 6px;
+        }
 
-        /* QUICK ACTIONS */
+        /* QUICK ACTIONS (Workable & Premium) */
         .quick-actions-list {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
         }
 
         .action-btn {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 14px 18px;
+            padding: 16px 20px;
             border-radius: 12px;
             text-decoration: none;
             font-size: 14px;
             font-weight: 700;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-            border: none;
-            cursor: pointer;
-            width: 100%;
-            text-align: left;
-            font-family: inherit;
         }
 
         .action-btn.primary {
-            background: linear-gradient(100deg, #f45188 0%, #c85eb2 48%, #4e83e5 100%);
+            background: linear-gradient(135deg, #ec4899 0%, #a855f7 100%);
             color: white;
-            box-shadow: 0 8px 20px rgba(94, 107, 204, 0.25);
+            box-shadow: 0 4px 12px rgba(236, 72, 153, 0.25);
+            border: none;
         }
 
         .action-btn.primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 25px rgba(94, 107, 204, 0.35);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(236, 72, 153, 0.4);
         }
 
         .action-btn.secondary {
             background: var(--white);
-            border: 1px solid var(--border);
-            color: var(--text);
+            border: 1px solid #cbd5e1;
+            color: var(--blue-dark);
+            box-shadow: var(--shadow-sm);
         }
 
         .action-btn.secondary:hover {
-            background: var(--sky-soft);
+            background: var(--cream);
+            border-color: #94a3b8;
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: var(--shadow-md);
             color: var(--blue);
-            border-color: #a8bce0;
-            transform: translateY(-2px);
         }
 
         .action-btn i {
             font-size: 16px;
-            width: 22px;
+            width: 24px;
             text-align: center;
         }
 
         /* STORE STATUS FOOTER BAR */
         .store-status-bar {
             margin-top: 30px;
-            background: rgba(255, 255, 255, 0.95);
+            background: #ffffff;
             border: 1px solid var(--border);
             border-radius: 16px;
-            padding: 18px 24px;
+            padding: 20px 28px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 8px 20px var(--shadow);
+            box-shadow: var(--shadow-md);
         }
 
         .store-status-bar h4 {
-            font-size: 14px;
-            font-weight: 800;
+            font-size: 15px;
+            font-weight: 700;
             color: var(--blue-dark);
-            margin-bottom: 2px;
+            margin-bottom: 4px;
         }
 
         .store-status-bar p {
-            font-size: 12.5px;
-            font-weight: 600;
+            font-size: 13px;
             color: var(--muted);
+            font-weight: 500;
         }
 
         .status-badge {
-            background: #eef9f0;
-            color: #1e8449;
-            padding: 6px 14px;
+            background: #dcfce7;
+            color: #16a34a;
+            padding: 8px 16px;
             border-radius: 20px;
             font-size: 12px;
-            font-weight: 800;
+            font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
+            border: 1px solid #bbf7d0;
         }
 
         .status-badge i {
@@ -635,7 +660,7 @@ $adminEmail = $_SESSION['admin_email'] ?? 'admin@ssrini.com';
         /* RESPONSIVE */
         @media (max-width: 900px) {
             .sidebar {
-                width: 70px;
+                width: 76px;
             }
             .sidebar-brand span,
             .sidebar-menu span,
@@ -644,7 +669,7 @@ $adminEmail = $_SESSION['admin_email'] ?? 'admin@ssrini.com';
                 display: none;
             }
             .main-content {
-                margin-left: 70px;
+                margin-left: 76px;
             }
             .sidebar-brand {
                 justify-content: center;
@@ -655,7 +680,10 @@ $adminEmail = $_SESSION['admin_email'] ?? 'admin@ssrini.com';
                 padding: 14px;
             }
             .sidebar-menu li a i {
-                font-size: 18px;
+                font-size: 20px;
+            }
+            .dashboard-body {
+                padding: 20px;
             }
         }
     </style>
@@ -734,7 +762,6 @@ $adminEmail = $_SESSION['admin_email'] ?? 'admin@ssrini.com';
                 </div>
                 <h1>SSRINI HANDICRAFTS</h1>
                 <p>Empowering rural artisans of Bengal with elegance and authenticity.</p>
-                <div class="banner-divider"></div>
             </div>
 
             <!-- STATS CARDS -->
@@ -804,13 +831,13 @@ $adminEmail = $_SESSION['admin_email'] ?? 'admin@ssrini.com';
                                         <tr>
                                             <td><strong>#<?= $order['id'] ?></strong></td>
                                             <td><?= htmlspecialchars($order['customer_name'] ?? 'Guest', ENT_QUOTES, 'UTF-8') ?></td>
-                                            <td>₹<?= number_format($order['total_amount'], 2) ?></td>
+                                            <td style="font-weight: 700; color: #15803d;">₹<?= number_format($order['total_amount'], 2) ?></td>
                                             <td>
                                                 <span class="badge badge-<?= strtolower($order['order_status']) ?>">
                                                     <?= htmlspecialchars($order['order_status'], ENT_QUOTES, 'UTF-8') ?>
                                                 </span>
                                             </td>
-                                            <td><?= date('M d, Y', strtotime($order['created_at'])) ?></td>
+                                            <td style="color: #64748b; font-size: 13px;"><?= date('M d, Y', strtotime($order['created_at'])) ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -828,20 +855,28 @@ $adminEmail = $_SESSION['admin_email'] ?? 'admin@ssrini.com';
                         </div>
                     </div>
 
-                    <div class="quick-actions-list">
-                        <button type="button" id="qaAddProduct" class="action-btn primary">
+
+
+
+                    <!-- Enhanced anchor tags for guaranteed navigation -->
+                   
+                <div class="quick-actions-list">
+                        <a href="../products.php" class="action-btn primary">
                             <i class="fa-solid fa-plus"></i> Add Product
-                        </button>
-                        <button type="button" id="qaNewOrder" class="action-btn secondary">
-                            <i class="fa-solid fa-box"></i> New Order
-                        </button>
-                        <button type="button" id="qaCreateInvoice" class="action-btn secondary">
+                        </a>
+                        <a href="../admin/orders.php" class="action-btn secondary">
+                            <i class="fa-solid fa-box"></i> New Orders
+                        </a>
+                        <a href="../invoices.php" class="action-btn secondary">
                             <i class="fa-solid fa-file-invoice"></i> Create Invoice
-                        </button>
-                        <button type="button" id="qaAddCategory" class="action-btn secondary">
+                        </a>
+                        <a href="../categories.php" class="action-btn secondary">
                             <i class="fa-solid fa-tag"></i> Add Category
-                        </button>
+                        </a>
                     </div>
+
+
+
                 </div>
 
             </div>
@@ -860,25 +895,6 @@ $adminEmail = $_SESSION['admin_email'] ?? 'admin@ssrini.com';
         </div>
 
     </div>
-
-    <!-- Script to handle Quick Actions redirection seamlessly -->
-    <script>
-        document.getElementById('qaAddProduct').addEventListener('click', function() {
-            window.location.href = 'products.php?open_add=true';
-        });
-
-        document.getElementById('qaNewOrder').addEventListener('click', function() {
-            window.location.href = 'orders.php';
-        });
-
-        document.getElementById('qaCreateInvoice').addEventListener('click', function() {
-            window.location.href = 'invoices.php';
-        });
-
-        document.getElementById('qaAddCategory').addEventListener('click', function() {
-            window.location.href = 'products.php?open_category=true';
-        });
-    </script>
 
 </body>
 </html>

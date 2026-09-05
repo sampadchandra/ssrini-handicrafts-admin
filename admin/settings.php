@@ -602,6 +602,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $errorMessage !== '') {
         }
         .quick-link:last-child { border-bottom: none; padding-bottom: 0; }
         .quick-link:hover { color: #7627c9; }
+        #overlaper{
+            width:100vw;
+            margin-left: 20%;
+        }
 
         /* FIXED RESPONSIVE MEDIA QUERIES FOR MOBILE & TABLETS */
         @media (max-width: 992px) {
@@ -614,6 +618,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $errorMessage !== '') {
             }
             .settings-layout {
                 grid-template-columns: 1fr !important;
+            }
+            #overlaper{
+                width: 100vw;
+                margin-left: 0;
+                margin-top: 50px;
+                
             }
         }
 
@@ -636,6 +646,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $errorMessage !== '') {
             .save-btn {
                 width: 100%;
             }
+
         }
     </style>
 </head>
@@ -654,7 +665,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $errorMessage !== '') {
     ?>
 
     <!-- MAIN SETTINGS PANEL -->
-    <main class="settings-content-body">
+     <div id="overlaper" >
+            <main class="settings-content-body">
         <!-- HEADER -->
         <header class="page-header">
             <div class="page-title">
@@ -950,6 +962,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $errorMessage !== '') {
             </aside>
         </div>
     </main>
+
+     </div>
 </div>
 
 </body>
